@@ -1,7 +1,7 @@
 from socket import *
 
 server_name = "127.0.0.1"
-server_port = 120000
+server_port = 12000
 
 server_socket = socket(AF_INET, SOCK_STREAM)
 server_socket.bind((server_name, server_port))
