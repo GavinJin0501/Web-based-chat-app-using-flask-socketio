@@ -13,6 +13,7 @@ while True:
     connection_socket, addr = server_socket.accept()
 
     sentence = connection_socket.recv(1024).decode()
-    capitalized_sentence = sentence.upper()
+    print(sentence)
+    capitalized_sentence = "Hello this is server!"
     connection_socket.send(capitalized_sentence.encode())
     connection_socket.close()
