@@ -1,7 +1,10 @@
 const net = require('net');
-const client = net.createConnection({ port: 12000}, () => {
-    console.log("Client: I connected to the server.");
-    client.write("Client: Hello this is client!");
+const server_port = 12000;
+const server_name = "127.0.0.1"
+
+const client = net.createConnection(server_port, server_name, () => {
+    console.log("CLIENT: I connected to the server.");
+    client.write("CLIENT: Hello this is client!");
 });
 
 client.on('data', (data) => {
@@ -10,5 +13,5 @@ client.on('data', (data) => {
 });
 
 client.on('end', () => {
-    console.log("Client: I disconnected from the server.")
+    console.log("CLIENT: I disconnected from the server.")
 })

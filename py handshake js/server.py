@@ -14,6 +14,6 @@ while True:
 
     sentence = connection_socket.recv(1024).decode()
     print(sentence)
-    capitalized_sentence = "Hello this is server!"
+    capitalized_sentence = "SERVER: Hello this is server!"
     connection_socket.send(capitalized_sentence.encode())
     connection_socket.close()
