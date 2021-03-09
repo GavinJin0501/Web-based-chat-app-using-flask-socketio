@@ -1,6 +1,6 @@
 const net = require('net');
 const server_port = 12000;
-const server_name = "127.0.0.1"
+const server_name = "172.20.10.6"
 
 const client = net.createConnection(server_port, server_name, () => {
     console.log("CLIENT: I connected to the server.");
