@@ -13,9 +13,8 @@ $(document).ready(function() {
 	var socket = io.connect('http://127.0.0.1:5000');
 
 	socket.on('connect', function() {
-<!--	帮我把这个json写一下，我想按照ics的那种format text一样传输：{Type: socket/private_msg/group_chat, xxx:xxx}-->
-<!--	        msg = {"Type":"Socket", "ID": socket.id}-->
-		    socket.send(msg);
+            const meInfo = {"Type": "Socket", "Id": socket.id};
+		    socket.send(JSON.stringify(meInfo));
 	});
 
 <!--	socket.on('message', function(msg) {-->

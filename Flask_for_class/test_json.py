@@ -12,5 +12,6 @@ import json
 # print(json_data)
 # print(type(json_data))
 
-s = '{"Name": "Gavin", "Age":18}'
-print(type(json.loads(s)))
+name = "Gavin"
+s = {"Name": name, "Age":18}
+print(json.loads(json.dumps(s)))
