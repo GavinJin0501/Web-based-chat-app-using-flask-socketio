@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+</head>
+
+<body>
+{% with message = get_flashed_messages() %}
+	{% if not message %}
+		<a href="/login">Login</a>
+		<a href="/register">Register</a>
+	{% endif %}
+
+	{% if message %}
+		<a href="/logout">Logout</a>
+		<a href="/remove_account">Remove Account</a>
+		<p class="message">{{message}} You have {{num}} follower(s)</p> </br>
+		<a href="/tweets">View your tweets</a> </br>
+		<a href="/find_people">Find people to follow</a> </br>
+		<a href="/unfollow">Unfollow someone</a> </br>
+		<a href="/view_followed">View people you have followed</a> </br>
+		</br>
+
+        	<h4>15 most recent tweets from you and your followers </h4> </br>
+
+		{% for line in tweets%}
+	        	<p>{{line}}</p>
+	        	<hr>
+		{% endfor %}
+	{% endif %}
+{% endwith %}
+</body>
+
+</html>
