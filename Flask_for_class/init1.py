@@ -7,11 +7,11 @@ import check_db
 # Initialize the app from Flask
 app = Flask(__name__)
 
+
 # Define a route to hello function
 @app.route('/')
 def hello():
     return render_template('index.html')
-
 
 # Define route for login
 @app.route('/login')
@@ -43,7 +43,6 @@ def loginAuth():
         # session is a built in
         session['username'] = username
         return redirect(url_for('home'))
-
 
 
 # Authenticates the register
