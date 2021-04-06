@@ -7,53 +7,42 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 </head>
 <body>
-<script type="text/javascript">
-$(document).ready(function() {
+<!--<script type="text/javascript">-->
+<!--$(document).ready(function() {-->
 
-	var socket = io.connect('http://127.0.0.1:5000');
+<!--	var socket = io.connect('http://127.0.0.1:5000');-->
 
-	socket.on('connect', function() {
-            const meInfo = {"Type": "Socket", "Id": socket.id};
-		    socket.send(JSON.stringify(meInfo));
-	});
-
-<!--	socket.on('message', function(msg) {-->
-<!--		$("#messages").append('<li>'+msg+'</li>');-->
-<!--		console.log('Received message');-->
+<!--	socket.on('connect', function() {-->
+<!--            const meInfo = {"Type": "Socket", "Id": socket.id};-->
+<!--		    socket.send(JSON.stringify(meInfo));-->
 <!--	});-->
 
-<!--	$('#sendbutton').on('click', function() {-->
-<!--		socket.send($('#myMessage').val());-->
-<!--		$('#myMessage').val('');-->
-<!--	});-->
+<!--&lt;!&ndash;	socket.on('message', function(msg) {&ndash;&gt;-->
+<!--&lt;!&ndash;		$("#messages").append('<li>'+msg+'</li>');&ndash;&gt;-->
+<!--&lt;!&ndash;		console.log('Received message');&ndash;&gt;-->
+<!--&lt;!&ndash;	});&ndash;&gt;-->
 
-});
-</script>
+<!--&lt;!&ndash;	$('#sendbutton').on('click', function() {&ndash;&gt;-->
+<!--&lt;!&ndash;		socket.send($('#myMessage').val());&ndash;&gt;-->
+<!--&lt;!&ndash;		$('#myMessage').val('');&ndash;&gt;-->
+<!--&lt;!&ndash;	});&ndash;&gt;-->
+
+<!--});-->
+<!--</script>-->
 <!--<ul id="messages"></ul>-->
 <!--<input type="text" id="myMessage">-->
 <!--<button id="sendbutton">Send</button>-->
 {% with message = get_flashed_messages() %}
 	{% if not message %}
+		<p class="message">{{"Welcome to our chat app"}}</p>
 		<a href="/login">Login</a>
 		<a href="/register">Register</a>
 	{% endif %}
 
 	{% if message %}
-		<a href="/logout">Logout</a>
-		<a href="/remove_account">Remove Account</a>
-		<p class="message">{{message}} You have {{num}} follower(s)</p> </br>
-		<a href="/tweets">View your tweets</a> </br>
-		<a href="/find_people">Find people to follow</a> </br>
-		<a href="/unfollow">Unfollow someone</a> </br>
-		<a href="/view_followed">View people you have followed</a> </br>
-		</br>
-
-        	<h4>15 most recent tweets from you and your followers </h4> </br>
-
-		{% for line in tweets%}
-	        	<p>{{line}}</p>
-	        	<hr>
-		{% endfor %}
+		<p class="message">{{message}}</p>
+		<a href="/login">Login</a>
+		<a href="/register">Register</a>
 	{% endif %}
 {% endwith %}
 </body>

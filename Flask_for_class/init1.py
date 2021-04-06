@@ -7,7 +7,6 @@ import check_db
 # Initialize the app from Flask
 app = Flask(__name__)
 
-
 # Define a route to hello function
 @app.route('/')
 def hello():
