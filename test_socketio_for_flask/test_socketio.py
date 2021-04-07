@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from flask_socketio import SocketIO, send
 import json
 import check_db
+from datetime import datetime
 
 
 GROUPS = {}                    # { group_id/group_name: [members] }
@@ -101,14 +102,26 @@ def handle_message(msg):
         CLIENT_NAME_TO_ID[username] = user_id
         print("User '%s':'%s' has connected to the server." % (user_id, msg["Username"]))
         print(CLIENT_NAME_TO_ID)
-        # send(msg, broadcast=True)
+        curr_time = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+        to_send = "%s %s: Hello, everyone. I am in." % (curr_time, username)
+        send(to_send, broadcast=True)
 
     elif msg["Type"] == "Post":
-        pass
+        print(msg)
+        content = msg["Content"]
+        username = msg["From"]
+        curr_time = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+        to_send = "%s %s: %s" % (curr_time, username, content)
+        # to = socketio.room. Can we do multiple rooms at the same time?
+        send(to_send, to=CLIENT_NAME_TO_ID["Alan"])
 
 
 @app.route('/logout')
 def logout():
+    # username = session["Username"]
+    # curr_time = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+    # to_send = "%s %s: Hello, everyone. I am in." % (curr_time, username)
+    # send(to_send, broadcast=True)#, include_self=False)
     session.pop('Username', None)
     return redirect('/')
 

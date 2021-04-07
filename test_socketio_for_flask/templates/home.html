@@ -6,30 +6,34 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 </head>
 <body>
-<form action="/post" method="POST">
-	<h1>Welcome {{username}}</h1>
-	<input type="text" name = "blog" placeholder="your post" required/> </br>
-	<input type="submit" value = Post />
-</form>
+<!--<form action="/post" method="POST">-->
+<!--	<h1>Welcome {{username}}</h1>-->
+<!--	<input type="text" name = "blog" placeholder="your post" required/> </br>-->
+<!--	<input type="submit" value = Post />-->
+<!--</form>-->
 
+<!--<table>-->
+<!--	<th>Time</th>-->
+<!--	<th>Post</th>-->
+
+<!--{% for line in posts %}-->
+<!--	<tr>-->
+<!--		<td>{{line[0]}}</td>-->
+<!--		<td>{{line[1]}}</td>-->
+<!--		-->
+<!--	</tr>-->
+<!--{% endfor %}-->
+<!--</table>-->
+
+<h1>Welcome {{username}}</h1>
+<ul id="messages"></ul>
+<input type="text" id="myMessage">
+<button id="sendbutton">Send</button>
 <style type="text/css">
 	table, th, td{
 		border: 1px solid black;
 	}
 </style>
-
-<table>
-	<th>Time</th>
-	<th>Post</th>
-
-{% for line in posts %}
-	<tr>
-		<td>{{line[0]}}</td>
-		<td>{{line[1]}}</td>
-		
-	</tr>
-{% endfor %}
-</table>
 
 <a href="/logout">Logout</a>
 
@@ -43,15 +47,17 @@ $(document).ready(function() {
 		    socket.send(JSON.stringify(meInfo));
 	});
 
-<!--	socket.on('message', function(msg) {-->
-<!--		$("#messages").append('<li>'+msg+'</li>');-->
-<!--		console.log('Received message');-->
-<!--	});-->
+	socket.on('message', function(msg) {
+		$("#messages").append('<li>'+msg+'</li>');
+		console.log('Received message');
+	});
 
-<!--	$('#sendbutton').on('click', function() {-->
-<!--		socket.send($('#myMessage').val());-->
-<!--		$('#myMessage').val('');-->
-<!--	});-->
+	$('#sendbutton').on('click', function() {
+        console.log('Send message');
+	    const meInfo = {"Type": "Post", "From": "{{username}}", "To": "broadcast", "Content": $('#myMessage').val()};
+		socket.send(JSON.stringify(meInfo));
+		$('#myMessage').val('');
+	});
 
 });
 </script>
