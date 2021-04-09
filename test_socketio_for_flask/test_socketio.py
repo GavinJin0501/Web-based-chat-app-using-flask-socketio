@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_socketio import SocketIO, send
 import json
 import sqlite3
@@ -156,6 +156,9 @@ def logout():
     session.pop('Username', None)
     return redirect('/')
 
+@app.route('/getMyInfo', methods=["POST"])
+def sendInfo():
+    return jsonify(username=session.get("Username", "None"))
 
 if __name__ == "__main__":
     socket.run(app, debug=True)
