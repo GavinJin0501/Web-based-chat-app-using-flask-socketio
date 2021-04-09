@@ -5,6 +5,7 @@ import sqlite3
 from datetime import datetime
 import check_db     # our library for dealing with our database
 
+
 GROUPS = {}  # { group_id/group_name: [members] }
 CLIENT_NAME_TO_ID = {}  # { username: socketio_id }
 
@@ -126,7 +127,7 @@ def home():
 def handle_message(msg):
     msg = json.loads(msg)
 
-    # Type 1: Socket, when client connecting to the server, but not authorized
+    # Type 1: Socket, when client connecting to the server and authorized
     if msg["Type"] == "Socket":
         user_id = msg["Id"]
         username = msg["Username"]
@@ -138,11 +139,11 @@ def handle_message(msg):
         send(to_send, broadcast=True)
 
     elif msg["Type"] == "Post":
-        print(msg)
+        # print(msg)
         content = msg["Content"]
         username = msg["From"]
         curr_time = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
-        to_send = "%s %s: %s" % (curr_time, username, content)
+        to_send = "%s %s: %s %s" % (curr_time, username, content, session["Username"])
         # to = socketio.room. Can we do multiple rooms at the same time?
         send(to_send, to=CLIENT_NAME_TO_ID["Alan"])
 
