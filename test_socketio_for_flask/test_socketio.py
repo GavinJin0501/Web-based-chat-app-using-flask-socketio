@@ -3,8 +3,7 @@ from flask_socketio import SocketIO, send
 import json
 import sqlite3
 from datetime import datetime
-import check_db     # our library for dealing with our database
-
+import check_db  # our library for dealing with our database
 
 GROUPS = {}  # { group_id/group_name: [members] }
 CLIENT_NAME_TO_ID = {}  # { username: socketio_id }
@@ -157,9 +156,11 @@ def logout():
     session.pop('Username', None)
     return redirect('/')
 
+
 @app.route('/getMyInfo', methods=["POST"])
 def sendInfo():
     return jsonify(username=session.get("Username", "None"))
+
 
 if __name__ == "__main__":
     socket.run(app, debug=True)
