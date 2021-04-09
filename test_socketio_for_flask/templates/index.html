@@ -3,35 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Chat Room</title>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.0/socket.io.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 </head>
 <body>
-<!--<script type="text/javascript">-->
-<!--$(document).ready(function() {-->
-
-<!--	var socket = io.connect('http://127.0.0.1:5000');-->
-
-<!--	socket.on('connect', function() {-->
-<!--            const meInfo = {"Type": "Socket", "Id": socket.id};-->
-<!--		    socket.send(JSON.stringify(meInfo));-->
-<!--	});-->
-
-<!--&lt;!&ndash;	socket.on('message', function(msg) {&ndash;&gt;-->
-<!--&lt;!&ndash;		$("#messages").append('<li>'+msg+'</li>');&ndash;&gt;-->
-<!--&lt;!&ndash;		console.log('Received message');&ndash;&gt;-->
-<!--&lt;!&ndash;	});&ndash;&gt;-->
-
-<!--&lt;!&ndash;	$('#sendbutton').on('click', function() {&ndash;&gt;-->
-<!--&lt;!&ndash;		socket.send($('#myMessage').val());&ndash;&gt;-->
-<!--&lt;!&ndash;		$('#myMessage').val('');&ndash;&gt;-->
-<!--&lt;!&ndash;	});&ndash;&gt;-->
-
-<!--});-->
-<!--</script>-->
-<!--<ul id="messages"></ul>-->
-<!--<input type="text" id="myMessage">-->
-<!--<button id="sendbutton">Send</button>-->
 {% with message = get_flashed_messages() %}
 	{% if not message %}
 		<p class="message">{{"Welcome to our chat app"}}</p>

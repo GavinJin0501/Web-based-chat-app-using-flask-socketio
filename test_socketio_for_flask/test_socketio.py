@@ -1,17 +1,20 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_socketio import SocketIO, send
 import json
-import check_db
+import sqlite3
 from datetime import datetime
+import check_db     # our library for dealing with our database
 
-
-GROUPS = {}                    # { group_id/group_name: [members] }
-CLIENT_NAME_TO_ID = {}         # { username: socketio_id }
+GROUPS = {}  # { group_id/group_name: [members] }
+CLIENT_NAME_TO_ID = {}  # { username: socketio_id }
 
 app = Flask(__name__)
 app.config["SERECT_KEY"] = "GavinAndAlan"
 app.secret_key = "my secret key"
 socket = SocketIO(app, cors_allowed_origins='*')
+
+# Initialize database connection
+check_db.user_table_initialization()
 
 
 # 1. initial page
@@ -29,18 +32,34 @@ def login():
 # 2.2 login authorize
 @app.route('/loginAuth', methods=['GET', 'POST'])
 def loginAuth():
+    # if request.method == "POST":
+    #     username = request.form['username']
+    #     password = request.form['password']
+    #
+    #     table = check_db.load_table()
+    #
+    #     if username not in table or table[username] != password:
+    #         error = 'Invalid login or username'
+    #         return render_template('login.html', error=error)
+    #     else:
+    #         session["Username"] = username
+    #         return redirect(url_for('home'))
+    # else:
+    #     if "Username" in session:
+    #         return redirect(url_for('home'))
+    #     return render_template("login.html")
     if request.method == "POST":
         username = request.form['username']
         password = request.form['password']
 
-        table = check_db.load_table()
+        data = check_db.login_check(username, password)
 
-        if username not in table or table[username] != password:
-            error = 'Invalid login or username'
-            return render_template('login.html', error=error)
-        else:
+        if data:
             session["Username"] = username
             return redirect(url_for('home'))
+        else:
+            error = 'Invalid login or username'
+            return render_template('login.html', error=error)
     else:
         if "Username" in session:
             return redirect(url_for('home'))
@@ -56,25 +75,37 @@ def register():
 # 3.2 register authorize
 @app.route('/registerAuth', methods=['GET', 'POST'])
 def registerAuth():
-    # grabs information from the forms
+    # # grabs information from the forms
+    # username = request.form['username']
+    # password = request.form['password']
+    #
+    # # open JSON file to check
+    # table = check_db.load_table()
+    #
+    # if username in table:
+    #     # If user exists
+    #     error = "This username already exists"
+    #     return render_template('register.html', error=error)
+    # elif len(password) < 4:
+    #     error = "Password length must be at least 4 characters"
+    #     return render_template('register.html', error=error)
+    # else:
+    #     table[username] = password
+    #     check_db.write_table(table)
+    #     flash("You are logged in")
+    #     session["Username"] = username
+    #     return redirect(url_for("home"))
     username = request.form['username']
     password = request.form['password']
 
-    # open JSON file to check
-    table = check_db.load_table()
+    data = check_db.register_check(username)
 
-    if username in table:
-        # If user exists
-        error = "This username already exists"
-        return render_template('register.html', error=error)
-    elif len(password) < 4:
-        error = "Password length must be at least 4 characters"
+    if data:
+        error = "This user already exists"
         return render_template('register.html', error=error)
     else:
-        table[username] = password
-        check_db.write_table(table)
-        flash("You are logged in")
         session["Username"] = username
+        check_db.register(username, password)
         return redirect(url_for("home"))
 
 
