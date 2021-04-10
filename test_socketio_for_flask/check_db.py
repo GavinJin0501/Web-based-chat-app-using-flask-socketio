@@ -14,6 +14,16 @@ import sqlite3
 #         file.write(json.dumps(table))
 
 
+def drop_table():
+    conn = sqlite3.connect("system_database.db")
+    cursor = conn.cursor()
+    query = """DROP TABLE Users"""
+    cursor.execute(query)
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+
 def user_table_initialization():
     conn = sqlite3.connect("system_database.db")
     cursor = conn.cursor()
@@ -24,7 +34,6 @@ def user_table_initialization():
     conn.commit()
     cursor.close()
     conn.close()
-    return
 
 
 def login_check(username, password):
@@ -54,6 +63,43 @@ def register(username, password):
     cursor = conn.cursor()
     query = "INSERT INTO Users VALUES(\'{}\', \'{}\')"
     cursor.execute(query.format(username, password))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return
+
+
+def get_history(id):
+    conn = sqlite3.connect("system_database.db")
+    cursor = conn.cursor()
+    query = """CREATE TABLE IF NOT EXISTS \'{}\'(
+                        from        VARCHAR(10),
+                        time        DATETIME,
+                        message     VARCHAR(256))"""
+    cursor.execute(query.format(id))
+    conn.commit()
+
+    query = """SELECT * FROM \'{}\'"""
+    cursor.execute(query.format(id))
+    data = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return data
+
+
+def update_history(id, from_name, time, message):
+    conn = sqlite3.connect("system_database.db")
+    cursor = conn.cursor()
+    query = """CREATE TABLE IF NOT EXISTS \'{}\'(
+                            from        VARCHAR(10),
+                            time        DATETIME,
+                            message     VARCHAR(256))"""
+    cursor.execute(query.format(id))
+    conn.commit()
+
+    query  = """INSERT INTO \'{}\'
+                VALUES (\'{}\', \'{}\', \'{}\')"""
+    cursor.execute(query.format(id, from_name, time, message))
     conn.commit()
     cursor.close()
     conn.close()

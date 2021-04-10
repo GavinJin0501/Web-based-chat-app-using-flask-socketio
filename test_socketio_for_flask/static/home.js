@@ -27,7 +27,9 @@ $(document).ready(function() {
 
 	$('#sendbutton').on('click', function() {
         console.log('Send message');
-	    const meInfo = {"Type": "Post", "From": currentUserName, "To": "broadcast", "Content": $('#myMessage').val()};
+		msg = $('#myMessage').val();
+		$("#messages").append('<li>'+msg+'</li>');
+	    const meInfo = {"Type": "Post", "From": currentUserName, "To": "broadcast", "Content": msg};
 		socket.send(JSON.stringify(meInfo));
 		$('#myMessage').val('');
 	});
