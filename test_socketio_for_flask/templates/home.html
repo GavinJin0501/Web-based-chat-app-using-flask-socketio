@@ -38,6 +38,9 @@
 	    } else if (msg.Type == "Send") {
 	        temp = msg.Time.concat(" ", msg.From, ": ", msg.Content);
 	        $("#messages").append('<li>'+temp+'</li>');
+	    } else if (msg.Type == "history") {
+	        console.log("Receive history");
+	        msg.Content.forEach(element => $("#messages").append('<li>'+element+'</li>'));
 	    }
 
 		console.log('Received message');

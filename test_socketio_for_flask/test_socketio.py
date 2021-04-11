@@ -108,12 +108,12 @@ def handle_message(msg):
 
         # give the history
         history = check_db.get_history('general')
-        print(history)
-        # send(history, to=CLIENT_NAME_TO_ID[username])
+        if history[0] != "Above is the history":
+            print("Send history")
+            send(json.dumps({"Type": 'history', "Content": history}), to=CLIENT_NAME_TO_ID[username])
 
         content = "Hello, everyone. I am in."
         curr_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        # to_send = "%s %s: %s" % (curr_time, username, content)
         msg["Content"] = content
         msg["Time"] = curr_time
         for each in GROUPS['general']:
@@ -127,9 +127,7 @@ def handle_message(msg):
         to = msg["To"]
 
         curr_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        # to_send = "%s %s: %s" % (curr_time, username, content)
         check_db.update_history(to, username, curr_time, content)
-        # to = socketio.room. Can we do multiple rooms at the same time?
         msg["Time"] = curr_time
         for each in GROUPS[to]:
             if each != username:
