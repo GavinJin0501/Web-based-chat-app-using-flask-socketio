@@ -94,6 +94,7 @@ def handle_message(msg):
     msg = json.loads(msg)
 
     # Type 1: Connect, when client is authorized and connected to the server via socket.io. Put into the general channel
+    # msg = {"Type": "Connect", "Id": user_socket.io_id, "Username": username}
     if msg["Type"] == "Connect":
         user_id = msg["Id"]
         username = msg["Username"]
@@ -120,6 +121,8 @@ def handle_message(msg):
             send(json.dumps(msg), to=CLIENT_NAME_TO_ID[each])
 
     # Type 2: Send information to others.
+    # msg = {"Type": "Send", "From": from_user, "To": destination, "Content": content}
+    # -> May need a state: group/private
     elif msg["Type"] == "Send":
         # print(msg)
         content = msg["Content"]
@@ -127,14 +130,24 @@ def handle_message(msg):
         to = msg["To"]
 
         curr_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        # case 1: to a group
         check_db.update_history(to, username, curr_time, content)
         msg["Time"] = curr_time
         for each in GROUPS[to]:
             if each != username:
                 send(json.dumps(msg), to=CLIENT_NAME_TO_ID[each])
 
-    # Type 3: Join a private/group chat. msg = {"Type": "Join", "Chat": "Private/Group", "From": username, "To": xxx}
+        # case 2: to a private user
+        pass
+
+    # Type 3: Join a private/group chat.
+    # msg = {"Type": "Join", "Chat": "Private/Group", "From": username, "To": xxx, "Current": xxx}
     elif msg["Type"] == "Join":
+        pass
+
+    # Type 4: Create a group chat. msg = {"Type": "Create", "Name": group_name, "From": username}
+    elif msg["Type"] == "Create":
         pass
 
 
