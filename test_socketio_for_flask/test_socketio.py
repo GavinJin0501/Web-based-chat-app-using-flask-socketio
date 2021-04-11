@@ -1,22 +1,22 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
-from flask_socketio import SocketIO, send
+from flask_socketio import SocketIO, send, join_room, leave_room
 import json
 from datetime import datetime
-import check_db     # our library for dealing with our database
-import chat_utils   # our library for making standard message
+import check_db  # our library for dealing with our database
 
 CLIENT_NAME_TO_ID = {}  # { username: socketio_id }
-USERS = []      # For ajax update online user info
-GROUPS = []     # For ajax update group chat info
+USERS = []  # For ajax update online user info
+GROUPS = {"general": []}  # For ajax update group chat info
 
 app = Flask(__name__)
 app.config["SERECT_KEY"] = "GavinAndAlan"
 app.secret_key = "my secret key"
 socket = SocketIO(app, cors_allowed_origins='*')
 
-# Initialize database connection
-# check_db.drop_table()
+# Initialize database
+check_db.drop_table()
 check_db.user_table_initialization()
+check_db.history_table_initialization('general')
 
 
 # 1. initial page
@@ -81,7 +81,7 @@ def home(username):
     if username != "":
         # username = session["Username"]
         # print("Test session:", username)
-        print(username)
+        # print(username)
         post = "Hello Hello"
         return render_template('home.html', username=username, post=post)
     else:
@@ -93,46 +93,53 @@ def home(username):
 def handle_message(msg):
     msg = json.loads(msg)
 
-    # Type 1: Socket, when client is authorized and connected to the server via socket.io
-    if msg["Type"] == "Socket":
+    # Type 1: Connect, when client is authorized and connected to the server via socket.io. Put into the general channel
+    if msg["Type"] == "Connect":
         user_id = msg["Id"]
         username = msg["Username"]
-        CLIENT_NAME_TO_ID[username] = user_id
-        if username not in USERS:
+        if username not in CLIENT_NAME_TO_ID:
             USERS.append(username)
-        print("User '%s':'%s' has connected to the server." % (user_id, msg["Username"]))
-        print(CLIENT_NAME_TO_ID)
-        print(USERS)
-        chat_utils.print_segment()
+            GROUPS['general'].append(username)
+        CLIENT_NAME_TO_ID[username] = user_id
+        print("New User '%s' has connected to the server." % username)
+        # print(CLIENT_NAME_TO_ID)
+        # print(USERS)
+        check_db.print_segment()
+
+        # give the history
+        history = check_db.get_history('general')
+        print(history)
+        # send(history, to=CLIENT_NAME_TO_ID[username])
 
         content = "Hello, everyone. I am in."
-        curr_time = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
-        to_send = "%s %s: %s" % (curr_time, username, content)
-        send(to_send, broadcast=True)
+        curr_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        # to_send = "%s %s: %s" % (curr_time, username, content)
+        msg["Content"] = content
+        msg["Time"] = curr_time
+        for each in GROUPS['general']:
+            send(json.dumps(msg), to=CLIENT_NAME_TO_ID[each])
 
-    elif msg["Type"] == "Post":
+    # Type 2: Send information to others.
+    elif msg["Type"] == "Send":
         # print(msg)
         content = msg["Content"]
         username = msg["From"]
+        to = msg["To"]
 
-        curr_time = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
-        to_send = "%s %s: %s" % (curr_time, username, content)
+        curr_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        # to_send = "%s %s: %s" % (curr_time, username, content)
+        check_db.update_history(to, username, curr_time, content)
         # to = socketio.room. Can we do multiple rooms at the same time?
-        send(to_send, to=CLIENT_NAME_TO_ID["Alan"])
+        msg["Time"] = curr_time
+        for each in GROUPS[to]:
+            if each != username:
+                send(json.dumps(msg), to=CLIENT_NAME_TO_ID[each])
 
-    # # Type 2: Private message {"Type": "Private Chat", "From": username1, "To": username2, "Content": xxx, "Time": xxx}
-    # elif msg["Type"] == "Private Chat":
-    #     from_user = msg["From"]
-    #     to_user = msg["To"]
-    #     content = msg["Content"]
-    #     time = msg["Time"]
-    #
-    #     id =
-    #     check_db.update_history()
-    #
-    # # Type 3: Group message {"Type": "Group Chat", "From": username, "To": group_name, "Content": xxx, "Time": xxx}
-    # elif msg["Type"] == "Group Chat":
-    #     pass
+    # Type 3: Join a private/group chat. msg = {"Type": "Join", "Chat": "Private/Group", "From": username, "To": xxx}
+    elif msg["Type"] == "Join":
+        pass
+
+
 
 
 @app.route('/logout', defaults={'username': ""})
@@ -146,9 +153,8 @@ def logout(username):
         del CLIENT_NAME_TO_ID[username]
         print(CLIENT_NAME_TO_ID)
         print(USERS)
-        chat_utils.print_segment()
+        check_db.print_segment()
     return redirect('/')
-
 
 # @app.route('/getMyInfo', methods=["POST"])
 # def sendInfo():

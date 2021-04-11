@@ -25,12 +25,21 @@
     var currentUserName = "{{username}}";
 
 	socket.on('connect', function() {
-			const meInfo = {"Type": "Socket", "Id": socket.id, "Username": currentUserName}
+			const meInfo = {"Type": "Connect", "Id": socket.id, "Username": currentUserName}
 		    socket.send(JSON.stringify(meInfo));
 	});
 
 	socket.on('message', function(msg) {
-		$("#messages").append('<li>'+msg+'</li>');
+	    var temp;
+	    msg = JSON.parse(msg);
+	    if (msg.Type == "Connect") {
+	        temp = msg.Time.concat(" ", msg.Username, ": ", msg.Content);
+	        $("#messages").append('<li>'+temp+'</li>');
+	    } else if (msg.Type == "Send") {
+	        temp = msg.Time.concat(" ", msg.From, ": ", msg.Content);
+	        $("#messages").append('<li>'+temp+'</li>');
+	    }
+
 		console.log('Received message');
 	});
 
@@ -38,7 +47,7 @@
         console.log('Send message');
 		msg = $('#myMessage').val();
 		$("#messages").append('<li>'+msg+'</li>');
-	    const meInfo = {"Type": "Post", "From": currentUserName, "To": "broadcast", "Content": msg};
+	    const meInfo = {"Type": "Send", "From": currentUserName, "To": "general", "Content": msg};
 		socket.send(JSON.stringify(meInfo));
 		$('#myMessage').val('');
 	});
