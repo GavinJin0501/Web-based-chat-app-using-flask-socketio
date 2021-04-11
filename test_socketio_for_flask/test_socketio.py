@@ -140,8 +140,6 @@ def handle_message(msg):
         pass
 
 
-
-
 @app.route('/logout', defaults={'username': ""})
 @app.route('/logout/<string:username>')
 def logout(username):
