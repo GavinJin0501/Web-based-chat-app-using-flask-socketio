@@ -1,0 +1,73 @@
+div#main-box {
+    position: relative;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin: auto;
+    margin-top: 5%;
+    width: 80%;
+    height: 80%;
+    max-height: 600px;
+    border: 10px;
+    border-radius: 8px;
+    box-shadow: 10px 10px 30px grey;
+    background-color: #e4e4e4;
+}
+
+div#main-box div {
+    border-color: #aaaaaa;
+}
+
+div#header{
+    background-color: #e4e4e4;
+    border-bottom: 1px solid;
+    height: 10%;
+}
+
+div#header p{
+    display: inline;
+}
+
+div#left-bar{
+    /* position: absolute; */
+    margin-left: 0px;
+    box-sizing: border-box;
+    border-right: 1px solid;
+    border-bottom: 1px solid;
+    width: 30%;
+    height: 90%;
+    background-color: #f9f9f9;
+    padding-left: 0;
+    overflow: scroll;
+    float: left;
+}
+
+div#right-bar {
+    float: right;
+    overflow: scroll;
+    box-sizing: border-box;
+    background-color: #f9f9f9;
+    height: 90%;
+    width: 70%;
+    border-bottom: 1px solid;
+}
+
+div#logout-button {
+    float: right;
+    width: 100px;
+    cursor: pointer;
+    padding: 2px;
+    border-radius: 8px;
+    background-color: rgb(238, 97, 97)
+}
+
+div#logout-button a {
+    text-align: center;
+    color: #fff;
+    text-decoration: none;
+}
+
+div#logout-button img {
+    width: 20px;
+    margin: auto;
+    filter: invert(1);
+}

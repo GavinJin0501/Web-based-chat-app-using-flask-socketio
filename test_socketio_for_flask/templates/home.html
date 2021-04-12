@@ -2,24 +2,46 @@
 <head>
 	<meta charset="UTF-8">
     <title>Chat Room</title>
+	<link rel="stylesheet" href="../static/style.css">
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.0/socket.io.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 </head>
 <body>
+<div id="main-box">
+	<div id="header"> 
+		<p style="margin: 0;">Welcome {{username}}</p>
+		<div id="logout-button">
+			<img src="../static/exit-icon.png" alt="exit">
+			<a href="/logout/{{username}}">Logout</a>
+		</div>
+	</div>
+	<div id = "left-bar">
+		<div class="sidebar-element"></div>
+	</div>
+	<div id="right-bar">
+		<div id="message-box">
+			<ul id="messages"></ul>
+		</div>
+		<div id="type-box">
+			<input type="text" id="myMessage">
+			<button id="sendbutton">Send</button>
+		</div>
+	</div>
+</div>
 
-<h1>Welcome {{username}}</h1>
-<ul id="messages"></ul>
-<input type="text" id="myMessage">
-<button id="sendbutton">Send</button>
+
+
+
+
 <style type="text/css">
 	table, th, td{
 		border: 1px solid black;
 	}
 </style>
 
-<a href="/logout/{{username}}">Logout</a>
 
-<script>
+
+<!-- <script>
     $(document).ready(function() {
 	var socket = io.connect('http://127.0.0.1:5000');
     var currentUserName = "{{username}}";
@@ -63,8 +85,8 @@
 		})
         return;
 	});
-</script>
-<!--<script type="text/javascript" src="../static/home.js"></script>-->
+</script> -->
+<script type="text/javascript" src="../static/displayMessage.js"></script>
 
 </body>
 
