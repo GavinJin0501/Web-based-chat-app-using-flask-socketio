@@ -160,6 +160,8 @@ def logout(username):
         print(username)
         USERS.remove(username)
         del CLIENT_NAME_TO_ID[username]
+        for k in GROUPS:
+            GROUPS[k].remove(username)
         print(CLIENT_NAME_TO_ID)
         print(USERS)
         check_db.print_segment()
