@@ -37,13 +37,15 @@ def loginAuth():
     if request.method == "POST":
         username = request.form['username']
         password = request.form['password']
-        if username in USERS:
+        if username in CLIENT_NAME_TO_ID:
             error = 'User "%s" has already logged in!' % username
             return render_template('login.html', error=error)
 
         data = check_db.login_check(username, password)
 
         if data:
+            USERS.append(username)
+            # GROUPS['general'].append(username)
             return redirect(url_for('home', username=username))
         else:
             error = 'Invalid login or username'
@@ -68,7 +70,8 @@ def registerAuth():
         error = "This user already exists"
         return render_template('register.html', error=error)
     else:
-        # session["Username"] = username
+        USERS.append(username)
+        # GROUPS['general'].append(username)
         check_db.register(username, password)
         return redirect(url_for('home', username=username))
 
@@ -77,11 +80,14 @@ def registerAuth():
 @app.route('/home', defaults={'username': ""})
 @app.route('/home/<string:username>', endpoint='home')
 def home(username):
-    # if "Username" in session:
     if username != "":
-        # username = session["Username"]
-        # print("Test session:", username)
-        # print(username)
+        if username not in USERS:
+            flash("Don't cheat! Login first!")
+            return redirect(url_for("initial"))
+        for k in GROUPS:
+            if username in GROUPS[k]:
+                flash("Don't cheat! Login first!")
+                return redirect(url_for("initial"))
         post = "Hello Hello"
         return render_template('home.html', username=username, post=post)
     else:
@@ -98,10 +104,8 @@ def handle_message(msg):
     if msg["Type"] == "Connect":
         user_id = msg["Id"]
         username = msg["Username"]
-        if username not in CLIENT_NAME_TO_ID:
-            USERS.append(username)
-            GROUPS['general'].append(username)
         CLIENT_NAME_TO_ID[username] = user_id
+        GROUPS['general'].append(username)
         print("New User '%s' has connected to the server." % username)
         # print(CLIENT_NAME_TO_ID)
         # print(USERS)
@@ -155,11 +159,12 @@ def handle_message(msg):
 @app.route('/logout/<string:username>')
 def logout(username):
     if username != "":
-        if username not in USERS:
+        if username not in CLIENT_NAME_TO_ID:
             return redirect('/')
-        print(username)
+        print("User '%s' logs out." % username)
         USERS.remove(username)
-        del CLIENT_NAME_TO_ID[username]
+        CLIENT_NAME_TO_ID.pop(username, None)
+        # del CLIENT_NAME_TO_ID[username]
         for k in GROUPS:
             try:
                 GROUPS[k].remove(username)
@@ -169,11 +174,6 @@ def logout(username):
         print(USERS)
         check_db.print_segment()
     return redirect('/')
-
-# @app.route('/getMyInfo', methods=["POST"])
-# def sendInfo():
-#
-#     return jsonify(username=session.get("Username", "None"))
 
 
 if __name__ == "__main__":
