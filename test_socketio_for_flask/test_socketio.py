@@ -175,11 +175,6 @@ def logout(username):
         check_db.print_segment()
     return redirect('/')
 
-# @app.route('/getMyInfo', methods=["POST"])
-# def sendInfo():
-#
-#     return jsonify(username=session.get("Username", "None"))
-
 
 if __name__ == "__main__":
     socket.run(app, debug=True)
