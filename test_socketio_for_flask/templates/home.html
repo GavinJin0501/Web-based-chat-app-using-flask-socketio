@@ -56,10 +56,11 @@
 	var grouplist = [];
     $(document).ready(function() {
 	var socket = io.connect('http://127.0.0.1:5000');
-    
+    updateUserList();
+	updateGroupList();
 	// requesting the server to update groupchat and user list
-	setInterval(updateUserList, 1000);
-	setInterval(updateGroupList, 1000);
+	setInterval(updateUserList, 20000);
+	setInterval(updateGroupList, 20000);
 
 	socket.on('connect', function() {
 			const meInfo = {"Type": "Connect", "Id": socket.id, "Username": currentUserName}
