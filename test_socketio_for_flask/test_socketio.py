@@ -94,13 +94,16 @@ def home(username):
         flash("Don't cheat! Login first!")
         return redirect(url_for("initial"))
 
+
 @app.route('/get-user-list', methods=['POST'])
 def get_user_list():
     return jsonify(userlist=USERS)
 
+
 @app.route('/get-group-list', methods=['POST'])
 def get_group_list():
     return jsonify(grouplist=GROUPS)
+
 
 @socket.on("message")
 def handle_message(msg):
@@ -166,7 +169,7 @@ def handle_message(msg):
 @app.route('/logout/<string:username>')
 def logout(username):
     if username != "":
-        if username not in CLIENT_NAME_TO_ID:
+        if username not in CLIENT_NAME_TO_ID or username not in USERS:
             return redirect('/')
         print("User '%s' logs out." % username)
         USERS.remove(username)
@@ -181,8 +184,6 @@ def logout(username):
         print(USERS)
         check_db.print_segment()
     return redirect('/')
-
-
 
 
 if __name__ == "__main__":
