@@ -104,3 +104,6 @@ def update_history(id, from_name, time, message):
 def print_segment():
     print("============================================")
     return
+
+def happy():
+    pass
