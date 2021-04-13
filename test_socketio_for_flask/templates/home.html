@@ -51,9 +51,15 @@
 
 
 <script>
+	var currentUserName = "{{username}}";
+	var otherUsers = [];
+	var grouplist = [];
     $(document).ready(function() {
 	var socket = io.connect('http://127.0.0.1:5000');
-    var currentUserName = "{{username}}";
+    
+	// requesting the server to update groupchat and user list
+	setInterval(updateUserList, 1000);
+	setInterval(updateGroupList, 1000);
 
 	socket.on('connect', function() {
 			const meInfo = {"Type": "Connect", "Id": socket.id, "Username": currentUserName}
@@ -77,14 +83,22 @@
 		console.log('Received message');
 	});
 
-	$('#sendbutton').on('click', function() {
-        console.log('Send message');
-		msg = $('#myMessage').val();
-		$("#messages").append('<li>'+msg+'</li>');
-	    const meInfo = {"Type": "Send", "From": currentUserName, "To": "general", "Content": msg};
-		socket.send(JSON.stringify(meInfo));
-		$('#myMessage').val('');
+	$('#sendbutton').on('click', sendMessage);
+	$('#myMessage').on('keypress', function(e){
+		if(e.which == 13 || e.keyCode == 13) {
+			sendMessage();
+		}
 	});
+
+	function sendMessage() {
+		console.log('Send message');
+			msg = $('#myMessage').val();
+			$("#messages").append('<li>'+msg+'</li>');
+	    	const meInfo = {"Type": "Send", "From": currentUserName, "To": "general", "Content": msg};
+			socket.send(JSON.stringify(meInfo));
+			$('#myMessage').val('');
+	}
+
 	});
 	// testing logging out by closing the tab
 	window.addEventListener("beforeunload", function(e){
@@ -94,6 +108,68 @@
 		})
         return;
 	});
+
+	
+
+	function updateUserList() {
+		$.ajax({
+			url: "/get-user-list",
+			type: "POST",
+			dataType: "json",
+			success: function (data) {
+				console.log(data);
+				removingUsers = otherUsers.filter(u => !data.userlist.includes(u));
+				removingUsers.forEach(function(u){
+					let removingChild = document.getElementById(u + "-user-element");
+					document.getElementById("all-active-users-box").removeChild(removingChild);
+				});
+				otherUsers = otherUsers.filter(u => data.userlist.includes(u));
+				data.userlist.forEach(function(u){
+					if (u == currentUserName || otherUsers.includes(u)){
+						return;
+					}
+					else if (!otherUsers.includes(u)){
+						let userTab = document.createElement('div');
+						userTab.className = 'sidebar-element';
+						userTab.id = u + "-user-element";
+						let displayedUsername = document.createElement('h4');
+						displayedUsername.className = 'sidebar-element-name';
+						displayedUsername.innerHTML = u;
+						document.getElementById("all-active-users-box").appendChild(userTab);
+						userTab.appendChild(displayedUsername);
+						otherUsers.push(u);
+					}
+					
+				});
+			}
+		})
+	}
+
+	function updateGroupList() {
+		$.ajax({
+			url: "/get-group-list",
+			type: "POST",
+			dataType: "json",
+			success: function (data) {
+				console.log(data);
+				for (const [key, value] of Object.entries(data.grouplist)) {
+					if (grouplist.includes(key)){
+						continue;
+					}else{
+						let groupTab = document.createElement('div');
+						groupTab.className = 'sidebar-element';
+						groupTab.id = key + "-group-element";
+						let displayedGroupName = document.createElement('h4');
+						displayedGroupName.className = 'sidebar-element-name';
+						displayedGroupName.innerHTML = key;
+						document.getElementById("all-groups-box").appendChild(groupTab);
+						groupTab.appendChild(displayedGroupName);
+						grouplist.push(key);
+					}
+				}
+			}
+		})
+	}
 </script>
 <script type="text/javascript" src="../static/displayMessage.js"></script>
 

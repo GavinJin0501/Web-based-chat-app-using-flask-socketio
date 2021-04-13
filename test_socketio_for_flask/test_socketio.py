@@ -94,6 +94,13 @@ def home(username):
         flash("Don't cheat! Login first!")
         return redirect(url_for("initial"))
 
+@app.route('/get-user-list', methods=['POST'])
+def get_user_list():
+    return jsonify(userlist=USERS)
+
+@app.route('/get-group-list', methods=['POST'])
+def get_group_list():
+    return jsonify(grouplist=GROUPS)
 
 @socket.on("message")
 def handle_message(msg):
