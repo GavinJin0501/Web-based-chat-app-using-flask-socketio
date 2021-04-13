@@ -37,13 +37,13 @@ div#left-bar{
     height: 90%;
     background-color: #f9f9f9;
     padding-left: 0;
-    overflow: scroll;
+    /* overflow: scroll; */
     float: left;
 }
 
 div#right-bar {
     float: right;
-    overflow: scroll;
+    /* overflow: scroll; */
     box-sizing: border-box;
     background-color: #f9f9f9;
     height: 90%;
@@ -53,15 +53,27 @@ div#right-bar {
 
 div#logout-button {
     float: right;
-    width: 100px;
+    width: 80px;
+    margin-right: 5%;
     cursor: pointer;
     padding: 2px;
     border-radius: 8px;
-    background-color: rgb(238, 97, 97)
+    background-color: rgb(238, 97, 97);
+    transition: background-color 0.3s;
+}
+
+div#logout-button:hover {
+    background-color:rgb(216, 70, 70);
+}
+
+div#logout-button * {
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
 }
 
 div#logout-button a {
-    text-align: center;
+    
     color: #fff;
     text-decoration: none;
 }
@@ -71,3 +83,61 @@ div#logout-button img {
     margin: auto;
     filter: invert(1);
 }
+
+div#all-groups-box{
+    width: 100%;
+    height: 40%;
+    border-bottom: 1px solid;
+}
+
+div#all-active-users-box{
+    height: 60%;
+}
+
+
+div.content-box {
+    overflow: auto;
+    /* padding: 1em; */
+}
+
+div.sidebar-element{
+    padding-left: 1em;
+    border-top: 1px solid;
+}
+
+div.sidebar-element:last-child{
+    border-bottom: 1px solid;
+}
+
+div#message-box{
+    width: 100%;
+    height: 80%;
+    border-bottom: 1px solid;
+}
+
+div#type-box{
+    width: 100%;
+    height: 20%;
+}
+
+input#myMessage{
+    /* box-sizing: content-box; */
+    display
+    display: block;
+    height: 100%;
+    width: 80%;
+    border: none;
+    float: left;
+    /* vertical-align: ; */
+}
+
+button#sendbutton{
+    /* box-sizing: content-box; */
+    border: none;
+    height: 100%;
+    width: 20%;
+    background-color: rgb(119, 192, 150);
+}
+/* div.framework-box{
+    overflow: hidden;
+} */

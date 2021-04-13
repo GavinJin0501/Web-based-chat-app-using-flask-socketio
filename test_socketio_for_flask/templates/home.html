@@ -15,14 +15,23 @@
 			<a href="/logout/{{username}}">Logout</a>
 		</div>
 	</div>
-	<div id = "left-bar">
-		<div class="sidebar-element"></div>
+	<div class="framework-box" id="left-bar">
+		<div class="content-box" id="all-groups-box">
+			<p style="position: sticky;">all groups</p>
+		</div>
+		<div class="content-box" id="all-active-users-box">
+			<p style="position: sticky;">all active users</p>
+			<div class="sidebar-element">
+				<h4 class="sidebar-element-name">Gavin</h4>
+			</div>
+		</div>
+		
 	</div>
-	<div id="right-bar">
-		<div id="message-box">
+	<div class="framework-box" id="right-bar">
+		<div class="content-box" id="message-box">
 			<ul id="messages"></ul>
 		</div>
-		<div id="type-box">
+		<div class="content-box" id="type-box">
 			<input type="text" id="myMessage">
 			<button id="sendbutton">Send</button>
 		</div>
