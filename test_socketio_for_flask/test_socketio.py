@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
-from flask_socketio import SocketIO, send, join_room, leave_room
+from flask_socketio import SocketIO, send
 import json
 from datetime import datetime
 import check_db  # our library for dealing with our database
