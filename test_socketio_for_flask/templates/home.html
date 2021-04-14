@@ -103,7 +103,7 @@
 				console.log('Send message');
 				msg = $('#myMessage').val();
 				$("#messages").append('<li>' + msg + '</li>');
-				const meInfo = { "Type": "Send", "From": currentUserName, "To": "general", "Content": msg };
+				const meInfo = { "Type": "Send", "From": currentUserName, "To": "general", "Content": msg, "Chat": "group"};
 				socket.send(JSON.stringify(meInfo));
 				$('#myMessage').val('');
 			}
