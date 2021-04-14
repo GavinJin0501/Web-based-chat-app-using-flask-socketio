@@ -1,6 +1,6 @@
 console.log("works");
 
 function appendMessageFromJSON() {
-    return;
+    return; // return a html node
 }
 

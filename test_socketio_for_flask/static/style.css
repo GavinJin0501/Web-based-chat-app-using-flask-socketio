@@ -17,17 +17,17 @@ div#main-box div {
     border-color: #aaaaaa;
 }
 
-div#header{
+div#header {
     background-color: #e4e4e4;
     border-bottom: 1px solid;
     height: 10%;
 }
 
-div#header p{
+div#header p {
     display: inline;
 }
 
-div#left-bar{
+div#left-bar {
     /* position: absolute; */
     margin-left: 0px;
     box-sizing: border-box;
@@ -63,7 +63,7 @@ div#logout-button {
 }
 
 div#logout-button:hover {
-    background-color:rgb(216, 70, 70);
+    background-color: rgb(216, 70, 70);
 }
 
 div#logout-button * {
@@ -73,7 +73,7 @@ div#logout-button * {
 }
 
 div#logout-button a {
-    
+
     color: #fff;
     text-decoration: none;
 }
@@ -84,13 +84,13 @@ div#logout-button img {
     filter: invert(1);
 }
 
-div#all-groups-box{
+div#all-groups-box {
     width: 100%;
     height: 40%;
     border-bottom: 1px solid;
 }
 
-div#all-active-users-box{
+div#all-active-users-box {
     height: 60%;
 }
 
@@ -100,29 +100,38 @@ div.content-box {
     /* padding: 1em; */
 }
 
-div.sidebar-element{
+div.sidebar-element {
     padding-left: 1em;
+    height: 60px;
     border-top: 1px solid;
+    transition: all 0.2s;
 }
 
-div.sidebar-element:last-child{
+
+div#selected-sidebar {
+    /* background-color: rgb(119, 192, 150); */
+    border-left: 10px solid;
+    border-left-color: rgb(93, 145, 214) !important;
+    transition: all 0.2s;
+}
+
+div.sidebar-element:last-child {
     border-bottom: 1px solid;
 }
 
-div#message-box{
+div#message-box {
     width: 100%;
     height: 80%;
     border-bottom: 1px solid;
 }
 
-div#type-box{
+div#type-box {
     width: 100%;
     height: 20%;
 }
 
-input#myMessage{
+input#myMessage {
     /* box-sizing: content-box; */
-    display
     display: block;
     height: 100%;
     width: 80%;
@@ -131,13 +140,14 @@ input#myMessage{
     /* vertical-align: ; */
 }
 
-button#sendbutton{
+button#sendbutton {
     /* box-sizing: content-box; */
     border: none;
     height: 100%;
     width: 20%;
     background-color: rgb(119, 192, 150);
 }
+
 /* div.framework-box{
     overflow: hidden;
 } */
