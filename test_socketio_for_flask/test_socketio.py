@@ -4,6 +4,7 @@ import json
 from datetime import datetime
 import check_db  # our library for dealing with our database
 
+
 CLIENT_NAME_TO_ID = {}  # { username: socketio_id }
 USERS = []  # For ajax update online user info
 GROUPS = {"general": []}  # For ajax update group chat info
@@ -14,7 +15,7 @@ app.secret_key = "my secret key"
 socket = SocketIO(app, cors_allowed_origins='*')
 
 # Initialize database
-check_db.drop_table()
+# check_db.drop_table()
 check_db.user_table_initialization()
 check_db.history_table_initialization('general')
 
