@@ -1,5 +1,4 @@
 import sqlite3
-import hashlib
 
 
 def drop_table():
@@ -105,5 +104,9 @@ def print_segment():
     print("============================================")
     return
 
-def happy():
-    pass
+
+def private_db_naming(from_name, to_name):
+    if from_name > to_name:
+        return from_name + "_" + to_name
+    else:
+        return to_name + "_" + from_name

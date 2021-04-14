@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
-from flask_socketio import SocketIO, send, join_room, leave_room
+from flask_socketio import SocketIO, send
 import json
 from datetime import datetime
 import check_db  # our library for dealing with our database
@@ -135,25 +135,27 @@ def handle_message(msg):
             send(json.dumps(msg), to=CLIENT_NAME_TO_ID[each])
 
     # Type 2: Send information to others.
-    # msg = {"Type": "Send", "From": from_user, "To": destination, "Content": content}
+    # msg = {"Type": "Send", "From": from_user, "To": destination, "Content": content, "Chat": private/group}
     # -> May need a state: group/private
     elif msg["Type"] == "Send":
         # print(msg)
         content = msg["Content"]
-        username = msg["From"]
-        to = msg["To"]
+        from_name = msg["From"]
+        to_name = msg["To"]
 
         curr_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        msg["Time"] = curr_time
 
         # case 1: to a group
-        check_db.update_history(to, username, curr_time, content)
-        msg["Time"] = curr_time
-        for each in GROUPS[to]:
-            if each != username:
-                send(json.dumps(msg), to=CLIENT_NAME_TO_ID[each])
-
+        if msg["Chat"] == "group":
+            check_db.update_history(to_name, from_name, curr_time, content)
+            for each in GROUPS[to_name]:
+                if each != from_name:
+                    send(json.dumps(msg), to=CLIENT_NAME_TO_ID[each])
         # case 2: to a private user
-        pass
+        else:
+            check_db.update_history(check_db.private_db_naming(from_name, to_name), from_name, curr_time, content)
+            send(json.dumps(msg), to=CLIENT_NAME_TO_ID[to_name])
 
     # Type 3: Join a private/group chat.
     # msg = {"Type": "Join", "Chat": "Private/Group", "From": username, "To": xxx, "Current": xxx}
