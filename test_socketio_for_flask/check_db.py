@@ -1,4 +1,8 @@
 import sqlite3
+from werkzeug.security import generate_password_hash, check_password_hash
+
+
+PASSWORD_HASH = "sha256"
 
 
 def drop_table():
@@ -19,7 +23,7 @@ def user_table_initialization():
     cursor = conn.cursor()
     query = """CREATE TABLE IF NOT EXISTS `Users`(
                     `username`    VARCHAR(10) PRIMARY KEY,
-                    `password`    VARCHAR(40))"""
+                    `password`    VARCHAR(80))"""
     cursor.execute(query)
     conn.commit()
     cursor.close()
@@ -29,12 +33,14 @@ def user_table_initialization():
 def login_check(username, password):
     conn = sqlite3.connect("system_database.db")
     cursor = conn.cursor()
-    query = "SELECT * FROM `Users` WHERE `username` = \'{}\' and `password` = \'{}\'"
-    cursor.execute(query.format(username, password))
+    query = "SELECT * FROM `Users` WHERE `username` = \'{}\'"
+    cursor.execute(query.format(username))
     data = cursor.fetchall()
     cursor.close()
     conn.close()
-    return data
+    if not data:
+        return False
+    return check_password_hash(data[0][1], password)
 
 
 def register_check(username):
@@ -52,7 +58,7 @@ def register(username, password):
     conn = sqlite3.connect("system_database.db")
     cursor = conn.cursor()
     query = "INSERT INTO `Users` VALUES(\'{}\', \'{}\')"
-    cursor.execute(query.format(username, password))
+    cursor.execute(query.format(username, generate_password_hash(password, PASSWORD_HASH)))
     conn.commit()
     cursor.close()
     conn.close()
