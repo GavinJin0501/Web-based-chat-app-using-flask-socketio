@@ -42,9 +42,9 @@ def loginAuth():
             error = 'User "%s" has already logged in!' % username
             return render_template('login.html', error=error)
 
-        data = check_db.login_check(username, password)
+        login_success = check_db.login_check(username, password)
 
-        if data:
+        if login_success:
             USERS.append(username)
             # GROUPS['general'].append(username)
             return redirect(url_for('home', username=username))
