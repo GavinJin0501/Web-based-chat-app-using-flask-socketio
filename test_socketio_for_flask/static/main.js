@@ -16,7 +16,8 @@ $(document).ready(function () {
     socket.on('message', function (msg) {
         var temp;
         msg = JSON.parse(msg);
-        appendMessageFromJSON(msg);
+        console.log(msg);
+        // appendMessageFromJSON(msg);
         if (msg.Type == "Connect") {
             temp = msg.Time.concat(" ", msg.Username, ": ", msg.Content);
             $("#messages").append('<li>' + temp + '</li>');
