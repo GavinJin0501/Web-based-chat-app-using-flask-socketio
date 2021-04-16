@@ -8,10 +8,13 @@ PASSWORD_HASH = "sha256"
 def drop_table():
     conn = sqlite3.connect("system_database.db")
     cursor = conn.cursor()
-    query = """DROP TABLE `Users`"""
+    query = """DROP TABLE IF EXISTS `Users`"""
     cursor.execute(query)
     conn.commit()
-    query = """DROP TABLE `general`"""
+    query = """DROP TABLE IF EXISTS `general`"""
+    cursor.execute(query)
+    conn.commit()
+    query = """DROP TABLE IF EXISTS `Groups`"""
     cursor.execute(query)
     conn.commit()
     cursor.close()
@@ -25,6 +28,22 @@ def user_table_initialization():
                     `username`    VARCHAR(10) PRIMARY KEY,
                     `password`    VARCHAR(80))"""
     cursor.execute(query)
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+
+def group_table_initialization():
+    conn = sqlite3.connect("system_database.db")
+    cursor = conn.cursor()
+    query = """CREATE TABLE IF NOT EXISTS `Groups`(
+                        `group_name`      VARCHAR(20) PRIMARY KEY,
+                        `group_leader`    VARCHAR(10))"""
+    cursor.execute(query)
+    conn.commit()
+    query = """INSERT INTO `Groups`
+               VALUES (\'{}\', \'{}\')"""
+    cursor.execute(query.format("general", "king_jjy"))
     conn.commit()
     cursor.close()
     conn.close()
@@ -98,6 +117,28 @@ def update_history(id, from_name, time, message):
     query = """INSERT INTO \'{}\'
                VALUES (\'{}\', \'{}\', \'{}\')"""
     cursor.execute(query.format(id, from_name, time, message))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return
+
+
+def get_groups():
+    conn = sqlite3.connect("system_database.db")
+    cursor = conn.cursor()
+    query = "SELECT * FROM Groups"
+    cursor.execute(query.format())
+    groups = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return groups
+
+
+def update_groups(group_name, username):
+    conn = sqlite3.connect("system_database.db")
+    cursor = conn.cursor()
+    query = "INSERT INTO `Groups` VALUES(\'{}\', \'{}\')"
+    cursor.execute(query.format(group_name, username))
     conn.commit()
     cursor.close()
     conn.close()

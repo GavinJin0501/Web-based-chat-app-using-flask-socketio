@@ -4,10 +4,9 @@ import json
 from datetime import datetime
 import check_db  # our library for dealing with our database
 
-
 CLIENT_NAME_TO_ID = {}  # { username: socketio_id }
 USERS = []  # For ajax update online user info
-GROUPS = {"general": []}  # For ajax update group chat info
+GROUPS = {}  # For ajax update group chat info
 
 app = Flask(__name__)
 app.config["SERECT_KEY"] = "GavinAndAlan"
@@ -15,9 +14,14 @@ app.secret_key = "my secret key"
 socket = SocketIO(app, cors_allowed_origins='*')
 
 # Initialize database
-# check_db.drop_table()
+check_db.drop_table()
 check_db.user_table_initialization()
+check_db.group_table_initialization()
 check_db.history_table_initialization('general')
+
+# Initialize GROUPS
+for each in check_db.get_groups():  # each = (group_name, group_leader)
+    GROUPS[each[0]] = []
 
 
 # 1. initial page
@@ -118,6 +122,7 @@ def handle_message(msg):
         CLIENT_NAME_TO_ID[username] = user_id
         GROUPS['general'].append(username)
         print("New User '%s' has connected to the server." % username)
+        print(msg)
         # print(CLIENT_NAME_TO_ID)
         # print(USERS)
         check_db.print_segment()
@@ -132,6 +137,7 @@ def handle_message(msg):
         curr_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         msg["Content"] = content
         msg["Time"] = curr_time
+        # print("Boradcast to everyone in the general channel")
         for each in GROUPS['general']:
             send(json.dumps(msg), to=CLIENT_NAME_TO_ID[each])
 
@@ -164,16 +170,30 @@ def handle_message(msg):
         print(msg)
         from_name = msg["From"]
         to_name = msg["To"]
-        if msg["Chat"] == "private":    # to_name is a user name
+        if msg["Chat"] == "private":  # to_name is a user name
             check_db.history_table_initialization(check_db.private_db_naming(from_name, to_name))
-        elif msg["Chat"] == "group":    # to_name is a group name
-            check_db.history_table_initialization(to_name)
+            history = check_db.get_history(check_db.private_db_naming(from_name, to_name))
+            if history:
+                send(json.dumps({"Type": 'history', "Content": history}), to=from_name)
+        elif msg["Chat"] == "group":  # to_name is a group name
+            history = check_db.get_history(to_name)
+            if history:
+                send(json.dumps({"Type": 'history', "Content": history}), to=from_name)
             GROUPS[to_name].append(from_name)
         # may need to send a notification msg to those involved...
 
     # Type 4: Create a group chat. msg = {"Type": "Create", "Name": group_name, "From": username}
     elif msg["Type"] == "Create":
-        pass
+        group_name = msg["Name"]
+        from_name = msg["From"]
+        if group_name in GROUPS:
+            # Error, name already used
+            print("Group name already exists")
+            pass
+        else:
+            check_db.update_groups(group_name, from_name)
+            check_db.history_table_initialization(group_name)
+            print("Group created successfully")
 
 
 @app.route('/logout', defaults={'username': ""})
