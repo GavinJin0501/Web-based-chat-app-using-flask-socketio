@@ -1,11 +1,19 @@
-var otherUsers = [];
-var grouplist = [];
-var currentThread;
+var otherUsers = []; // [{name: xxx, node: js DOM element}, {}]
+var grouplist = []; // [{name: xxx, node: js DOM element}, {}]
+var currentThread = {
+    name: undefined,
+    type: undefined // group/private
+};
+var defaultThread;
 
 $(document).ready(function () {
     var socket = io.connect('http://127.0.0.1:5000');
+    // let promiseUpdate = new Promise(function(resolve, reject){
     updateUserList();
-    updateGroupList();
+    // javascript的async结构太复杂了，
+    // 简单粗暴的解决方法，第一次运行updateGroupList的时候
+    // 输入一个true，在函数内部的ajax实现selectBar给general的功能
+    updateGroupList(true);
     // requesting the server to update groupchat and user list
     setInterval(updateUserList, 5000);
     setInterval(updateGroupList, 5000);
@@ -29,7 +37,20 @@ $(document).ready(function () {
             // $("#messages").append('<li>' + temp + '</li>');
         } else if (msg.Type == "history") {
             console.log("Receive history");
-            // msg.Content.forEach(element => $("#messages").append('<li>' + element + '</li>'));
+            msg.Content.forEach(function(element, i) {
+                let splited = element.split(" ");
+                console.log(splited);
+                if (splited) {
+                    let jsonMsg = {
+                        Time: splited[0] + " " + splited[1],
+                        From: splited[2],
+                        Content: splited[3]
+                    }
+                    document.getElementById("message-box").appendChild(appendMessageFromJSON(jsonMsg));
+                }
+                
+            });
+            
         }
 
         console.log('Received message');
@@ -49,7 +70,11 @@ $(document).ready(function () {
         msg = $('#myMessage').val();
         // $("#messages").append('<li>' + msg + '</li>');
         // only sends to the currentThread 周四晚上排练前写的 没写完的功能
-        const meInfo = { "Type": "Send", "From": currentUserName, "To": currentThread, "Content": msg, "Chat": "group"};
+        const meInfo = {
+            "Type": "Send", "From": currentUserName,
+            "To": currentThread.name, "Content": msg, "Chat": "group"
+        };
+        // 在UI上显示自己发的信息
         document.getElementById("message-box").appendChild(appendMessageFromJSON(meInfo));
         socket.send(JSON.stringify(meInfo));
         $('#myMessage').val('');
@@ -66,12 +91,18 @@ window.addEventListener("beforeunload", function (e) {
 
 function selectBar(node) {
     if (node.id == "selected-sidebar") return;
-    
+
     if (document.getElementById("selected-sidebar") != null) {
         document.getElementById("selected-sidebar").setAttribute("id", "");
     };
     node.setAttribute('id', "selected-sidebar");
-    currentThread = node.firstChild.innerHTML;
+    currentThread.name = node.firstChild.innerHTML;
+    let parentID = node.parentNode.id;
+    if (parentID == "all-groups-box") {
+        currentThread.type = "group";
+    } else if (parentID == "all-active-users-box") {
+        currentThread.type = "private";
+    }
     console.log(currentThread)
 }
 
@@ -81,7 +112,7 @@ function updateUserList() {
         type: "POST",
         dataType: "json",
         success: function (data) {
-            console.log("users:",data.userlist);
+            console.log("users:", data.userlist);
             function checkExistence(username) {
                 for (let i = 0; i < otherUsers.length; i++) {
                     if (otherUsers[i].name == username) {
@@ -118,7 +149,7 @@ function updateUserList() {
     })
 }
 
-function updateGroupList() {
+function updateGroupList(first) {
     $.ajax({
         url: "/get-group-list",
         type: "POST",
@@ -146,6 +177,9 @@ function updateGroupList() {
                     displayedGroupName.innerHTML = key;
                     document.getElementById("all-groups-box").appendChild(groupTab);
                     groupTab.appendChild(displayedGroupName);
+                    if (first && key == "general") {
+                        selectBar(groupTab);
+                    }
                     grouplist.push({ "name": key, "node": groupTab });
                 }
             }
