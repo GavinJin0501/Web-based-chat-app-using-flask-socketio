@@ -179,7 +179,7 @@ def handle_message(msg):
             history = check_db.get_history(to_name)
             if history:
                 send(json.dumps({"Type": 'history', "Content": history}), to=from_name)
-            if from_name not in GROUPS:
+            if from_name not in GROUPS[to_name]:
                 GROUPS[to_name].append(from_name)
         # may need to send a notification msg to those involved...
 
@@ -198,7 +198,7 @@ def handle_message(msg):
 
 
 @app.route('/logout', defaults={'username': ""})
-@app.route('/logout/<string:username>')
+@app.route('/logout/<string:username>', methods=["Get"])
 def logout(username):
     if username != "":
         if username not in CLIENT_NAME_TO_ID or username not in USERS:
@@ -209,11 +209,13 @@ def logout(username):
         # del CLIENT_NAME_TO_ID[username]
         for k in GROUPS:
             try:
+                # print(GROUPS[k])
                 GROUPS[k].remove(username)
             except:
                 continue
         print(CLIENT_NAME_TO_ID)
         print(USERS)
+        print(GROUPS)
         check_db.print_segment()
     return redirect('/')
 
