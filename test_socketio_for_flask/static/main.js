@@ -7,8 +7,8 @@ $(document).ready(function () {
     updateUserList();
     updateGroupList();
     // requesting the server to update groupchat and user list
-    setInterval(updateUserList, 20000);
-    setInterval(updateGroupList, 20000);
+    setInterval(updateUserList, 5000);
+    setInterval(updateGroupList, 5000);
 
     socket.on('connect', function () {
         const meInfo = { "Type": "Connect", "Id": socket.id, "Username": currentUserName }

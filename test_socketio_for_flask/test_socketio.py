@@ -124,7 +124,7 @@ def handle_message(msg):
 
         # give the history
         history = check_db.get_history('general')
-        if history[0] != "Above is the history":
+        if history:
             print("Send history")
             send(json.dumps({"Type": 'history', "Content": history}), to=CLIENT_NAME_TO_ID[username])
 
@@ -161,7 +161,14 @@ def handle_message(msg):
     # Type 3: Join a private/group chat.
     # msg = {"Type": "Join", "Chat": "Private/Group", "From": username, "To": xxx, "Current": xxx}
     elif msg["Type"] == "Join":
-        pass
+        from_name = msg["From"]
+        to_name = msg["To"]
+        if msg["Chat"] == "private":    # to_name is a user name
+            check_db.history_table_initialization(check_db.private_db_naming(from_name, to_name))
+        elif msg["Chat"] == "group":    # to_name is a group name
+            check_db.history_table_initialization(to_name)
+            GROUPS[to_name].append(from_name)
+        # may need to send a notification msg to those involved...
 
     # Type 4: Create a group chat. msg = {"Type": "Create", "Name": group_name, "From": username}
     elif msg["Type"] == "Create":
