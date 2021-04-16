@@ -86,8 +86,6 @@ def get_history(id):
     data = []
     for each in cursor.fetchall():
         data.append(each[1] + " " + each[0] + ": " + each[2])
-    data.append("Above is the history")
-    data.append("")
     # print(data)
     cursor.close()
     conn.close()

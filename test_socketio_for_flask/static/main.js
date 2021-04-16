@@ -15,8 +15,8 @@ $(document).ready(function () {
     // 输入一个true，在函数内部的ajax实现selectBar给general的功能
     updateGroupList(true);
     // requesting the server to update groupchat and user list
-    setInterval(updateUserList, 20000);
-    setInterval(updateGroupList, 20000);
+    setInterval(updateUserList, 5000);
+    setInterval(updateGroupList, 5000);
 
     socket.on('connect', function () {
         const meInfo = { "Type": "Connect", "Id": socket.id, "Username": currentUserName }
