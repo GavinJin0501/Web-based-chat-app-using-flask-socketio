@@ -5,9 +5,10 @@ var currentThread = {
     type: undefined // group/private
 };
 var defaultThread;
+var socket;
 
 $(document).ready(function () {
-    var socket = io.connect('http://127.0.0.1:5000');
+    socket = io.connect('http://127.0.0.1:5000');
     // let promiseUpdate = new Promise(function(resolve, reject){
     updateUserList();
     // javascript的async结构太复杂了，
@@ -32,25 +33,27 @@ $(document).ready(function () {
             temp = msg.Time.concat(" ", msg.Username, ": ", msg.Content);
             // $("#messages").append('<li>' + temp + '</li>');
         } else if (msg.Type == "Send") {
-            document.getElementById("message-box").appendChild(appendMessageFromJSON(msg));
+            // console.log(msg,msg.From == currentThread.name)
+            if (msg.Chat == "group" && msg.To == currentThread.name || msg.Chat == "private" && msg.From == currentThread.name) {
+                document.getElementById("message-box").appendChild(appendMessageFromJSON(msg));
+            }
+            
             // temp = msg.Time.concat(" ", msg.From, ": ", msg.Content);
             // $("#messages").append('<li>' + temp + '</li>');
         } else if (msg.Type == "history") {
             console.log("Receive history");
-            msg.Content.forEach(function(element, i) {
+            msg.Content.forEach(function (element, i) {
                 let splited = element.split(" ");
                 console.log(splited);
-                if (splited) {
-                    let jsonMsg = {
-                        Time: splited[0] + " " + splited[1],
-                        From: splited[2],
-                        Content: splited[3]
-                    }
-                    document.getElementById("message-box").appendChild(appendMessageFromJSON(jsonMsg));
+                let jsonMsg = {
+                    Time: splited[0] + " " + splited[1],
+                    From: splited[2],
+                    Content: splited[3]
                 }
-                
+                document.getElementById("message-box").appendChild(appendMessageFromJSON(jsonMsg));
+
             });
-            
+
         }
 
         console.log('Received message');
@@ -72,7 +75,7 @@ $(document).ready(function () {
         // only sends to the currentThread 周四晚上排练前写的 没写完的功能
         const meInfo = {
             "Type": "Send", "From": currentUserName,
-            "To": currentThread.name, "Content": msg, "Chat": "group"
+            "To": currentThread.name, "Content": msg, "Chat": currentThread.type
         };
         // 在UI上显示自己发的信息
         document.getElementById("message-box").appendChild(appendMessageFromJSON(meInfo));
@@ -83,7 +86,7 @@ $(document).ready(function () {
 // testing logging out by closing the tab
 window.addEventListener("beforeunload", function (e) {
     $.ajax({
-        url: "/logout/{{username}}",
+        url: "/logout/" + currentUserName,
         type: "GET"
     })
     return;
@@ -96,6 +99,8 @@ function selectBar(node) {
         document.getElementById("selected-sidebar").setAttribute("id", "");
     };
     node.setAttribute('id', "selected-sidebar");
+    document.getElementById("message-box").innerHTML = "";
+    
     currentThread.name = node.firstChild.innerHTML;
     let parentID = node.parentNode.id;
     if (parentID == "all-groups-box") {
@@ -103,6 +108,11 @@ function selectBar(node) {
     } else if (parentID == "all-active-users-box") {
         currentThread.type = "private";
     }
+    const joinMsg = {
+        "Type": "Join", "From": currentUserName,
+        "To": currentThread.name, "Chat": currentThread.type
+    }
+    socket.send(JSON.stringify(joinMsg));
     console.log(currentThread)
 }
 

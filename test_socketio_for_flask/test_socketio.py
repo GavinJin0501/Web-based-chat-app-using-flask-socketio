@@ -161,6 +161,7 @@ def handle_message(msg):
     # Type 3: Join a private/group chat.
     # msg = {"Type": "Join", "Chat": "Private/Group", "From": username, "To": xxx, "Current": xxx}
     elif msg["Type"] == "Join":
+        print(msg)
         from_name = msg["From"]
         to_name = msg["To"]
         if msg["Chat"] == "private":    # to_name is a user name
