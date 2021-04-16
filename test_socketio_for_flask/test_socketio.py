@@ -179,7 +179,8 @@ def handle_message(msg):
             history = check_db.get_history(to_name)
             if history:
                 send(json.dumps({"Type": 'history', "Content": history}), to=from_name)
-            GROUPS[to_name].append(from_name)
+            if from_name not in GROUPS:
+                GROUPS[to_name].append(from_name)
         # may need to send a notification msg to those involved...
 
     # Type 4: Create a group chat. msg = {"Type": "Create", "Name": group_name, "From": username}
