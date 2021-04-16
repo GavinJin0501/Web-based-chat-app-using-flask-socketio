@@ -1,5 +1,7 @@
 var otherUsers = [];
 var grouplist = [];
+var currentThread;
+
 $(document).ready(function () {
     var socket = io.connect('http://127.0.0.1:5000');
     updateUserList();
@@ -16,17 +18,18 @@ $(document).ready(function () {
     socket.on('message', function (msg) {
         var temp;
         msg = JSON.parse(msg);
-        console.log(msg);
+        // console.log(msg);
         // appendMessageFromJSON(msg);
         if (msg.Type == "Connect") {
             temp = msg.Time.concat(" ", msg.Username, ": ", msg.Content);
-            $("#messages").append('<li>' + temp + '</li>');
+            // $("#messages").append('<li>' + temp + '</li>');
         } else if (msg.Type == "Send") {
-            temp = msg.Time.concat(" ", msg.From, ": ", msg.Content);
-            $("#messages").append('<li>' + temp + '</li>');
+            document.getElementById("message-box").appendChild(appendMessageFromJSON(msg));
+            // temp = msg.Time.concat(" ", msg.From, ": ", msg.Content);
+            // $("#messages").append('<li>' + temp + '</li>');
         } else if (msg.Type == "history") {
             console.log("Receive history");
-            msg.Content.forEach(element => $("#messages").append('<li>' + element + '</li>'));
+            // msg.Content.forEach(element => $("#messages").append('<li>' + element + '</li>'));
         }
 
         console.log('Received message');
@@ -44,8 +47,10 @@ $(document).ready(function () {
     function sendMessage() {
         console.log('Send message');
         msg = $('#myMessage').val();
-        $("#messages").append('<li>' + msg + '</li>');
-        const meInfo = { "Type": "Send", "From": currentUserName, "To": "general", "Content": msg };
+        // $("#messages").append('<li>' + msg + '</li>');
+        // only sends to the currentThread 周四晚上排练前写的 没写完的功能
+        const meInfo = { "Type": "Send", "From": currentUserName, "To": currentThread, "Content": msg, "Chat": "group"};
+        document.getElementById("message-box").appendChild(appendMessageFromJSON(meInfo));
         socket.send(JSON.stringify(meInfo));
         $('#myMessage').val('');
     }
@@ -61,11 +66,13 @@ window.addEventListener("beforeunload", function (e) {
 
 function selectBar(node) {
     if (node.id == "selected-sidebar") return;
-
+    
     if (document.getElementById("selected-sidebar") != null) {
         document.getElementById("selected-sidebar").setAttribute("id", "");
     };
     node.setAttribute('id', "selected-sidebar");
+    currentThread = node.firstChild.innerHTML;
+    console.log(currentThread)
 }
 
 function updateUserList() {

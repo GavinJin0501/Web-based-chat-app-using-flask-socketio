@@ -139,7 +139,7 @@ def handle_message(msg):
     # msg = {"Type": "Send", "From": from_user, "To": destination, "Content": content, "Chat": private/group}
     # -> May need a state: group/private
     elif msg["Type"] == "Send":
-        # print(msg)
+        print(msg)
         content = msg["Content"]
         from_name = msg["From"]
         to_name = msg["To"]

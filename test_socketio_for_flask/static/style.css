@@ -151,3 +151,30 @@ button#sendbutton {
 /* div.framework-box{
     overflow: hidden;
 } */
+
+div.message-element {
+    padding: 2%;
+}
+
+span.message-element-name {
+    font-weight: bold;
+    font-size: 1.3em;
+    margin-left: 2%;
+}
+
+span.message-element-time {
+    font-size: 0.8em;
+    color:rgb(134, 134, 134);
+    /* text-align: right; */
+    float: right;
+    margin-top: 10px;
+    margin-right: 5%;
+}
+
+p.message-element-content {
+    margin-left: 8%;
+    padding: 2%;
+    width: 70%;
+    border-radius: 10px;
+    background-color:rgb(224, 224, 224);
+}
