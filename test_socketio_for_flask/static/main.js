@@ -33,7 +33,7 @@ $(document).ready(function () {
             temp = msg.Time.concat(" ", msg.Username, ": ", msg.Content);
             // $("#messages").append('<li>' + temp + '</li>');
         } else if (msg.Type == "Send") {
-            // console.log(msg,msg.From == currentThread.name)
+            console.log(msg)
             if (msg.Chat == "group" && msg.To == currentThread.name || msg.Chat == "private" && msg.From == currentThread.name) {
                 document.getElementById("message-box").appendChild(appendMessageFromJSON(msg));
             }
@@ -42,13 +42,14 @@ $(document).ready(function () {
             // $("#messages").append('<li>' + temp + '</li>');
         } else if (msg.Type == "history") {
             console.log("Receive history");
+            console.log(msg)
             msg.Content.forEach(function (element, i) {
                 let splited = element.split(" ");
                 console.log(splited);
                 let jsonMsg = {
                     Time: splited[0] + " " + splited[1],
                     From: splited[2],
-                    Content: splited[3]
+                    Content: splited.slice(3)
                 }
                 document.getElementById("message-box").appendChild(appendMessageFromJSON(jsonMsg));
 
@@ -127,9 +128,9 @@ function updateUserList() {
                 for (let i = 0; i < otherUsers.length; i++) {
                     if (otherUsers[i].name == username) {
                         return true;
-                    }
-                    return false;
+                    }    
                 }
+                return false;
             }
             let removingUsers = otherUsers.filter(u => !data.userlist.includes(u.name));
             removingUsers.forEach(function (u) {
@@ -151,7 +152,7 @@ function updateUserList() {
                     displayedUsername.innerHTML = u;
                     document.getElementById("all-active-users-box").appendChild(userTab);
                     userTab.appendChild(displayedUsername);
-                    otherUsers.push({ "name": u, "node": userTab });
+                    otherUsers.push({ "name": u, "node": userTab, "unreadNum": 0});
                 }
 
             });
@@ -171,8 +172,8 @@ function updateGroupList(first) {
                     if (grouplist[i].name == groupname) {
                         return true;
                     }
-                    return false;
                 }
+                return false;
             }
             for (const [key, value] of Object.entries(data.grouplist)) {
                 if (checkExistence(key)) {
@@ -190,7 +191,7 @@ function updateGroupList(first) {
                     if (first && key == "general") {
                         selectBar(groupTab);
                     }
-                    grouplist.push({ "name": key, "node": groupTab });
+                    grouplist.push({ "name": key, "node": groupTab, "unreadNum": 0});
                 }
             }
         }

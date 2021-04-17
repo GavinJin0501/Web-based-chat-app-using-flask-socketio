@@ -15,7 +15,12 @@ function appendMessageFromJSON(message) {
 
     let time = document.createElement("span");
     time.className = "message-element-time";
-    time.innerHTML = message.Time;
+    if (message.Time) {
+        time.innerHTML = message.Time;
+    } else{
+        time.innerHTML = moment().format("YYYY-MM-DD hh:mm:ss");
+    }
+    
     title.appendChild(time);
 
     messageElement.appendChild(title);
