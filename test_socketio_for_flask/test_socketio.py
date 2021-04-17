@@ -14,10 +14,10 @@ app.secret_key = "my secret key"
 socket = SocketIO(app, cors_allowed_origins='*')
 
 # Initialize database
-check_db.drop_table()
-check_db.user_table_initialization()
-check_db.group_table_initialization()
-check_db.history_table_initialization('general')
+# check_db.drop_table()
+# check_db.user_table_initialization()
+# check_db.group_table_initialization()
+# check_db.history_table_initialization('general')
 
 # Initialize GROUPS
 for each in check_db.get_groups():  # each = (group_name, group_leader)
@@ -127,12 +127,6 @@ def handle_message(msg):
         # print(USERS)
         check_db.print_segment()
 
-        # give the history
-        # history = check_db.get_history('general')
-        # if history:
-        #     print("Send history")
-        #     send(json.dumps({"Type": 'history', "Content": history}), to=CLIENT_NAME_TO_ID[username])
-
         content = "Hello, everyone. I am in."
         curr_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         msg["Content"] = content
@@ -157,12 +151,14 @@ def handle_message(msg):
         if msg["Chat"] == "group":
             check_db.update_history(to_name, from_name, curr_time, content)
             for each in GROUPS[to_name]:
-                if each != from_name:
+                if each != from_name and CLIENT_NAME_TO_ID.get(each, False):
                     send(json.dumps(msg), to=CLIENT_NAME_TO_ID[each])
         # case 2: to a private user
         else:
             check_db.update_history(check_db.private_db_naming(from_name, to_name), from_name, curr_time, content)
-            send(json.dumps(msg), to=CLIENT_NAME_TO_ID[to_name])
+            # only forward the msg if the destination user is online:
+            if CLIENT_NAME_TO_ID.get(to_name, False):
+                send(json.dumps(msg), to=CLIENT_NAME_TO_ID[to_name])
 
     # Type 3: Join a private/group chat.
     # msg = {"Type": "Join", "Chat": "Private/Group", "From": username, "To": xxx, "Current": xxx}
@@ -179,7 +175,7 @@ def handle_message(msg):
         elif msg["Chat"] == "group":  # to_name is a group name
             history = check_db.get_history(to_name)
             if history:
-                print("send history from join request from" + from_name + " to " + to_name)
+                # print("send history from join request from" + from_name + " to " + to_name)
                 send(json.dumps({"Type": 'history', "Content": history}), to=CLIENT_NAME_TO_ID[from_name])
             if from_name not in GROUPS[to_name]:
                 GROUPS[to_name].append(from_name)
@@ -196,6 +192,7 @@ def handle_message(msg):
         else:
             check_db.update_groups(group_name, from_name)
             check_db.history_table_initialization(group_name)
+            GROUPS[group_name] = [from_name]
             print("Group created successfully")
 
 
