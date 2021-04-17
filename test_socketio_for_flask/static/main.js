@@ -33,11 +33,39 @@ $(document).ready(function () {
             temp = msg.Time.concat(" ", msg.Username, ": ", msg.Content);
             // $("#messages").append('<li>' + temp + '</li>');
         } else if (msg.Type == "Send") {
-            console.log(msg)
-            if (msg.Chat == "group" && msg.To == currentThread.name || msg.Chat == "private" && msg.From == currentThread.name) {
-                document.getElementById("message-box").appendChild(appendMessageFromJSON(msg));
+            console.log(msg);
+            function incrementUnread(obj) {
+                if (obj.unreadNum == 0) {
+                    obj.unreadNum++;
+                    let icon = document.createElement("p");
+                    icon.className = "sidebar-element-unread-icon";
+                    icon.innerHTML = obj.unreadNum;
+                    obj.node.appendChild(icon);
+                }
+                else if (obj.unreadNum > 0) {
+                    obj.unreadNum++;
+                    let icon = obj.node.children[1];
+                    icon.innerHTML = obj.unreadNum;
+                }
             }
-            
+            if (msg.Chat == "group") {
+                if (msg.To == currentThread.name) {
+                    document.getElementById("message-box").appendChild(appendMessageFromJSON(msg));
+                } 
+                else {
+                    let targetThread = grouplist.find(obj => obj.name == msg.To);
+                    incrementUnread(targetThread);
+                }
+            }
+            else if (msg.Chat == "private") {
+                if (msg.From == currentThread.name) {
+                    document.getElementById("message-box").appendChild(appendMessageFromJSON(msg));
+                }
+                else {
+                    let targetThread = otherUsers.find(obj => obj.name == msg.From);
+                    incrementUnread(targetThread);
+                }
+            }
             // temp = msg.Time.concat(" ", msg.From, ": ", msg.Content);
             // $("#messages").append('<li>' + temp + '</li>');
         } else if (msg.Type == "history") {
@@ -102,12 +130,26 @@ function selectBar(node) {
     node.setAttribute('id', "selected-sidebar");
     document.getElementById("message-box").innerHTML = "";
     
+    if (node.children.length > 1 ) {
+        node.removeChild(node.children[1]);
+    }
+    
+
     currentThread.name = node.firstChild.innerHTML;
     let parentID = node.parentNode.id;
+    let targetThread;
     if (parentID == "all-groups-box") {
         currentThread.type = "group";
+        targetThread = grouplist.find(obj => obj.name == currentThread.name);
+        if (targetThread) {
+            targetThread.unreadNum = 0;
+        }
     } else if (parentID == "all-active-users-box") {
         currentThread.type = "private";
+        targetThread = otherUsers.find(obj => obj.name == currentThread.name);
+        if (targetThread) {
+            targetThread.unreadNum = 0;
+        }
     }
     const joinMsg = {
         "Type": "Join", "From": currentUserName,
