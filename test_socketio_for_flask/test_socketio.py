@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, send_file
 from flask_socketio import SocketIO, send
 import json
 from datetime import datetime
@@ -14,10 +14,10 @@ app.secret_key = "my secret key"
 socket = SocketIO(app, cors_allowed_origins='*')
 
 # Initialize database
-# check_db.drop_table()
-# check_db.user_table_initialization()
-# check_db.group_table_initialization()
-# check_db.history_table_initialization('general')
+check_db.drop_table()
+check_db.user_table_initialization()
+check_db.group_table_initialization()
+check_db.history_table_initialization('general')
 
 # Initialize GROUPS
 for each in check_db.get_groups():  # each = (group_name, group_leader)
@@ -73,6 +73,9 @@ def registerAuth():
 
     if data:
         error = "This user already exists"
+        return render_template('register.html', error=error)
+    elif len(password) < 6 or len(password) > 12:
+        error = "password length is invalid: [6,12]"
         return render_template('register.html', error=error)
     else:
         USERS.append(username)
@@ -194,6 +197,18 @@ def handle_message(msg):
             check_db.history_table_initialization(group_name)
             GROUPS[group_name] = [from_name]
             print("Group created successfully")
+
+    # Type 5: Delete a group chat. msg = {"Type": Delete", "Name": group_name, "From": username}
+    elif msg["Type"] == "Delete":
+        group_name = msg["Name"]
+        from_name = msg["From"]
+        # Check if the from_name is the group_leader of this group
+        status = check_db.check_group_leader(group_name, from_name)
+        if status:  # group leader can delete the group
+            del GROUPS[group_name]
+            check_db.delete_group_chat(group_name)
+        else:       # others can not delete the group
+            pass
 
 
 @app.route('/logout', defaults={'username': ""})
