@@ -116,7 +116,7 @@ def update_history(id, from_name, time, message):
     cursor = conn.cursor()
     query = """INSERT INTO \'{}\'
                VALUES (\'{}\', \'{}\', \'{}\')"""
-    message = message.replace("\'", "\"")
+    message = message.replace("\'", "\'\'")
     cursor.execute(query.format(id, from_name, time, message))
     conn.commit()
     cursor.close()
