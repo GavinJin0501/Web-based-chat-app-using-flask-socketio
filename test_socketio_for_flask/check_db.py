@@ -116,6 +116,7 @@ def update_history(id, from_name, time, message):
     cursor = conn.cursor()
     query = """INSERT INTO \'{}\'
                VALUES (\'{}\', \'{}\', \'{}\')"""
+    message = message.replace("\'", "\'\'")
     cursor.execute(query.format(id, from_name, time, message))
     conn.commit()
     cursor.close()
@@ -139,6 +140,28 @@ def update_groups(group_name, username):
     cursor = conn.cursor()
     query = "INSERT INTO `Groups` VALUES(\'{}\', \'{}\')"
     cursor.execute(query.format(group_name, username))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return
+
+
+def check_group_leader(group_name, username):
+    conn = sqlite3.connect("system_database.db")
+    cursor = conn.cursor()
+    query = "SELECT * FROM \'{}\' WHERE group_name = \'{}\' AND group_leader = \'{}\'"
+    cursor.execute(query.format(group_name, username))
+    status = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return status != []
+
+
+def delete_group_chat(group_name):
+    conn = sqlite3.connect("system_database.db")
+    cursor = conn.cursor()
+    query = "DROP TABLE \'{}\'"
+    cursor.execute(query.format(group_name))
     conn.commit()
     cursor.close()
     conn.close()
