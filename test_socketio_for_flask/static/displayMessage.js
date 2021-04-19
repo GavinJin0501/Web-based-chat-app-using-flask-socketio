@@ -24,7 +24,7 @@ function appendMessageFromJSON(message) {
     title.appendChild(time);
 
     messageElement.appendChild(title);
-
+    
     let content = document.createElement("p");
     content.className = "message-element-content";
     content.innerHTML = message.Content;

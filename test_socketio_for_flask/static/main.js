@@ -50,7 +50,10 @@ $(document).ready(function () {
             }
             if (msg.Chat == "group") {
                 if (msg.To == currentThread.name) {
-                    document.getElementById("message-box").appendChild(appendMessageFromJSON(msg));
+                    let messageElement = appendMessageFromJSON(msg);
+                    document.getElementById("message-box").appendChild(messageElement);
+                    messageElement.scrollIntoView();
+                    // document.getElementById("message-box").appendChild(appendMessageFromJSON(msg));
                 } 
                 else {
                     let targetThread = grouplist.find(obj => obj.name == msg.To);
@@ -59,7 +62,10 @@ $(document).ready(function () {
             }
             else if (msg.Chat == "private") {
                 if (msg.From == currentThread.name) {
-                    document.getElementById("message-box").appendChild(appendMessageFromJSON(msg));
+                    let messageElement = appendMessageFromJSON(msg);
+                    document.getElementById("message-box").appendChild(messageElement);
+                    messageElement.scrollIntoView();
+                    // document.getElementById("message-box").appendChild(appendMessageFromJSON(msg));
                 }
                 else {
                     let targetThread = otherUsers.find(obj => obj.name == msg.From);
@@ -77,12 +83,11 @@ $(document).ready(function () {
                 let jsonMsg = {
                     Time: splited[0] + " " + splited[1],
                     From: splited[2],
-                    Content: splited.slice(3)
+                    Content: splited.slice(3).join(" ")
                 }
                 document.getElementById("message-box").appendChild(appendMessageFromJSON(jsonMsg));
-
             });
-
+            document.getElementById("message-box").lastChild.scrollIntoView();
         }
 
         console.log('Received message');
@@ -107,7 +112,9 @@ $(document).ready(function () {
             "To": currentThread.name, "Content": msg, "Chat": currentThread.type
         };
         // 在UI上显示自己发的信息
-        document.getElementById("message-box").appendChild(appendMessageFromJSON(meInfo));
+        let messageElement = appendMessageFromJSON(meInfo);
+        document.getElementById("message-box").appendChild(messageElement);
+        messageElement.scrollIntoView();
         socket.send(JSON.stringify(meInfo));
         $('#myMessage').val('');
     }

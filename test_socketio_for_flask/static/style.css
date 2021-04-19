@@ -201,3 +201,29 @@ p.sidebar-element-unread-icon {
     color: white;
     background-color: rgb(93, 145, 214);
 }
+
+div.box-tag {
+    padding: 2%;
+    padding-left: 5%;
+    background-color: rgb(238, 238, 238);
+    box-shadow: 0px 3px 4px rgb(201, 201, 201);
+    position: sticky;
+    top: 0;
+    left: 0;
+}
+
+button#createbutton {
+    background-color: rgb(93, 145, 214);
+    border-radius: 10px;
+    border: none;
+    color: white;
+    float: right;
+    margin-top: 0.3em;
+    /* font-size: 1.2em; */
+}
+
+button#createbutton:hover{
+    cursor: pointer;
+    background-color: rgb(64, 116, 184);
+
+}
