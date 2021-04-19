@@ -33,9 +33,6 @@ def drop_table():
     query = """DROP TABLE IF EXISTS `general`"""
     cursor.execute(query)
     conn.commit()
-    query = """DROP TABLE IF EXISTS `Groups`"""
-    cursor.execute(query)
-    conn.commit()
     cursor.close()
     conn.close()
 
@@ -47,26 +44,6 @@ def user_table_initialization():
                     `username`    VARCHAR(10) PRIMARY KEY,
                     `password`    VARCHAR(80))"""
     cursor.execute(query)
-    conn.commit()
-    cursor.close()
-    conn.close()
-
-
-def group_table_initialization():
-    conn = sqlite3.connect("system_database.db")
-    cursor = conn.cursor()
-    query = """CREATE TABLE IF NOT EXISTS `Groups`(
-                        `group_name`      VARCHAR(20) PRIMARY KEY,
-                        `group_leader`    VARCHAR(10))"""
-    cursor.execute(query)
-    conn.commit()
-    query = """INSERT INTO `Groups`
-               VALUES (\'{}\', \'{}\')"""
-    cursor.execute(query.format("general", "king_jjy"))
-    conn.commit()
-    query = """INSERT INTO `Users`
-                   VALUES (\'{}\', \'{}\')"""
-    cursor.execute(query.format("king_jjy", generate_password_hash("20073809aB", PASSWORD_HASH)))
     conn.commit()
     cursor.close()
     conn.close()
@@ -110,7 +87,7 @@ def register(username, password):
 def history_table_initialization(id):
     conn = sqlite3.connect("system_database.db")
     cursor = conn.cursor()
-    query = """CREATE TABLE IF NOT EXISTS `\'{}\'`(
+    query = """CREATE TABLE IF NOT EXISTS [\'{}\'](
                             `from`        VARCHAR(10),
                             `time`        DATETIME,
                             `message`     VARCHAR(256) DEFAULT "",
@@ -124,7 +101,7 @@ def history_table_initialization(id):
 def get_history(id):
     conn = sqlite3.connect("system_database.db")
     cursor = conn.cursor()
-    query = """SELECT * FROM `\'{}\'`"""
+    query = """SELECT * FROM [\'{}\']"""
     cursor.execute(query.format(id))
     data = []
     for each in cursor.fetchall():
@@ -138,7 +115,7 @@ def get_history(id):
 def update_history(id, from_name, time, message):
     conn = sqlite3.connect("system_database.db")
     cursor = conn.cursor()
-    query = """INSERT INTO `\'{}\'`
+    query = """INSERT INTO [\'{}\']
                VALUES (\'{}\', \'{}\', \'{}\', '')"""
     message = message.replace("\'", "\'\'")
     cursor.execute(query.format(id, from_name, time, message))
@@ -148,22 +125,10 @@ def update_history(id, from_name, time, message):
     return
 
 
-def select_all_members_in_group(group_name):
-    conn = sqlite3.connect("system_database.db")
-    cursor = conn.cursor()
-    query = """SELECT DISTINCT `from` FROM `\'{}\'`"""
-    cursor.execute(query.format(group_name))
-    members = cursor.fetchall()
-    print(members)
-    cursor.close()
-    conn.close()
-    return
-
-
 def delete_group_chat(group_name):
     conn = sqlite3.connect("system_database.db")
     cursor = conn.cursor()
-    query = "DROP TABLE `\'{}\'`"
+    query = "DROP TABLE [\'{}\']"
     cursor.execute(query.format(group_name))
     conn.commit()
     cursor.close()

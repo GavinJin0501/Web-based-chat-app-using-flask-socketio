@@ -16,8 +16,8 @@ socket = SocketIO(app, cors_allowed_origins='*')
 # Initialize database
 check_db.drop_table()
 check_db.user_table_initialization()
-check_db.group_table_initialization()
 check_db.history_table_initialization('general')
+# check_db.delete_group_chat('general')
 
 # Initialize GROUPS
 GROUPS = check_db.get_json_groups()
