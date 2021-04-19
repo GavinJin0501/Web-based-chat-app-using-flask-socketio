@@ -4,8 +4,7 @@
 	<meta charset="UTF-8">
 	<title>Chat Room</title>
 	<link rel="stylesheet" href="../static/style.css">
-	<script type="text/javascript"
-		src="../static/lib/socket.io.min.js"></script>
+	<script type="text/javascript" src="../static/lib/socket.io.min.js"></script>
 	<script src="../static/lib/jquery.min.js"></script>
 	<script src="../static/lib/moment.js"></script>
 </head>
@@ -21,8 +20,8 @@
 		</div>
 		<div class="framework-box" id="left-bar">
 			<div class="content-box" id="all-groups-box">
-				<div class= "box-tag">all groups
-					<button id="createbutton">+</button>
+				<div class="box-tag">all groups
+					<button id="createbutton" onclick="openBox()">+</button>
 				</div>
 			</div>
 			<div class="content-box" id="all-active-users-box">
@@ -36,6 +35,15 @@
 			<div class="content-box" id="type-box">
 				<input type="text" id="myMessage">
 				<button id="sendbutton">Send</button>
+			</div>
+		</div>
+		<div id="selection-box">
+			<div id="users-checkbox">
+			</div>
+			<input type="text" placeholder="group name" id="create-group-text">
+			<div id="deciding-buttons">
+				<button id="cancel-button" onclick="closeBox()">cancel</button>
+				<button id="accept-button" onclick="createRoom()">create</button>
 			</div>
 		</div>
 	</div>

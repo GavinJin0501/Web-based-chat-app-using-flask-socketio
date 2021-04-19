@@ -7,6 +7,84 @@ var currentThread = {
 var defaultThread;
 var socket;
 
+function openBox() {
+    let box = document.getElementById("selection-box");
+    if (box.style.zIndex == 1 || box.style.opacity == 1) {
+        return;
+    }
+
+    let userCheckbox = document.getElementById("users-checkbox");
+    updateUserList();
+    otherUsers.forEach(function(d) {
+        let input = document.createElement("input");
+        input.type = "checkbox";
+        input.name = d.name;
+        input.id = d.name + "-input";
+        let label = document.createElement("label");
+        label.innerHTML = d.name;
+        userCheckbox.appendChild(input);
+        userCheckbox.appendChild(label);
+        userCheckbox.appendChild(document.createElement("br"));
+    });
+
+    box.style.opacity = 1;
+    box.style.zIndex = 1;
+}
+
+function createRoom() {
+    function checkExistence(n) {
+        for (let i = 0; i < grouplist.length; i++) {
+            if (grouplist[i].name == n) {
+                return true;
+            }
+        }
+        return false;
+    }
+    let checkBoxes = document.querySelectorAll("#users-checkbox input[type='checkbox']");
+    console.log(checkBoxes);
+    let selectedUsers = [];
+    for (i = 0; i < checkBoxes.length; i++) {
+        if(checkBoxes[i].checked) {
+            selectedUsers.push(checkBoxes[i].name);
+        }
+    }
+    console.log(selectedUsers);
+    let groupName = $('#create-group-text').val();
+    if (checkExistence(groupName)) {
+        alert("group name exists!");
+        $('#create-group-text').val('');
+        return;
+    }else {
+        const createRoomMessage = {
+            "Type": "Create", "Name": groupName, "From": currentUserName
+        }
+        socket.send(JSON.stringify(createRoomMessage));
+        setTimeout(() => {
+            updateGroupList(true, groupName);
+        }, 500);
+        changeColor();
+    }
+    closeBox();
+}
+
+function closeBox() {
+    let box = document.getElementById("selection-box");
+    
+    box.style.opacity = 0;
+    setTimeout(function(){
+        box.style.zIndex = -1;
+        let userCheckbox = document.getElementById("users-checkbox");
+        userCheckbox.innerHTML = "";
+        $('#create-group-text').val('');
+    }, 500);
+    
+}
+
+
+function changeColor() {
+    document.body.style.backgroundColor = `hsl(${Math.random()*360}, 60%, 60%)`;
+}
+
 $(document).ready(function () {
     socket = io.connect('http://127.0.0.1:5000');
     // let promiseUpdate = new Promise(function(resolve, reject){
@@ -14,7 +92,7 @@ $(document).ready(function () {
     // javascript的async结构太复杂了，
     // 简单粗暴的解决方法，第一次运行updateGroupList的时候
     // 输入一个true，在函数内部的ajax实现selectBar给general的功能
-    updateGroupList(true);
+    updateGroupList(true, "general");
     // requesting the server to update groupchat and user list
     setInterval(updateUserList, 5000);
     setInterval(updateGroupList, 5000);
@@ -103,6 +181,10 @@ $(document).ready(function () {
 
 
     function sendMessage() {
+        if(Math.random() < 0.3) {
+            changeColor();
+        }
+
         console.log('Send message');
         msg = $('#myMessage').val();
         // $("#messages").append('<li>' + msg + '</li>');
@@ -209,7 +291,7 @@ function updateUserList() {
     })
 }
 
-function updateGroupList(first) {
+function updateGroupList(select, name) {
     $.ajax({
         url: "/get-group-list",
         type: "POST",
@@ -237,7 +319,7 @@ function updateGroupList(first) {
                     displayedGroupName.innerHTML = key;
                     document.getElementById("all-groups-box").appendChild(groupTab);
                     groupTab.appendChild(displayedGroupName);
-                    if (first && key == "general") {
+                    if (select && key == name) {
                         selectBar(groupTab);
                     }
                     grouplist.push({ "name": key, "node": groupTab, "unreadNum": 0});
