@@ -20,8 +20,8 @@ check_db.group_table_initialization()
 check_db.history_table_initialization('general')
 
 # Initialize GROUPS
-for each in check_db.get_groups():  # each = (group_name, group_leader)
-    GROUPS[each[0]] = []
+GROUPS = check_db.get_json_groups()
+print(GROUPS)
 
 
 # 1. initial page
@@ -92,10 +92,9 @@ def home(username):
         if username not in USERS:
             flash("Don't cheat! Login first!")
             return redirect(url_for("initial"))
-        for k in GROUPS:
-            if username in GROUPS[k]:
-                flash("Don't cheat! Login first!")
-                return redirect(url_for("initial"))
+        if username in CLIENT_NAME_TO_ID:
+            flash("Don't cheat! Login first!")
+            return redirect(url_for("initial"))
         post = "Hello Hello"
         return render_template('home.html', username=username, post=post)
     else:
@@ -124,6 +123,7 @@ def handle_message(msg):
         username = msg["Username"]
         CLIENT_NAME_TO_ID[username] = user_id
         GROUPS['general'].append(username)
+        check_db.update_json_groups(GROUPS)
         print("New User '%s' has connected to the server." % username)
         print(msg)
         # print(CLIENT_NAME_TO_ID)
@@ -135,8 +135,9 @@ def handle_message(msg):
         msg["Content"] = content
         msg["Time"] = curr_time
         # print("Boradcast to everyone in the general channel")
-        for each in GROUPS['general']:
-            send(json.dumps(msg), to=CLIENT_NAME_TO_ID[each])
+        # for each in GROUPS['general']:
+        #     if CLIENT_NAME_TO_ID.get(each, False):
+        #         send(json.dumps(msg), to=CLIENT_NAME_TO_ID[each])
 
     # Type 2: Send information to others.
     # msg = {"Type": "Send", "From": from_user, "To": destination, "Content": content, "Chat": private/group}
@@ -182,6 +183,7 @@ def handle_message(msg):
                 send(json.dumps({"Type": 'history', "Content": history}), to=CLIENT_NAME_TO_ID[from_name])
             if from_name not in GROUPS[to_name]:
                 GROUPS[to_name].append(from_name)
+                check_db.update_json_groups(GROUPS)
         # may need to send a notification msg to those involved...
 
     # Type 4: Create a group chat. 
@@ -194,9 +196,10 @@ def handle_message(msg):
             print("Group name already exists")
             pass
         else:
-            check_db.update_groups(group_name, from_name)
+            # check group name if it is not valid
             check_db.history_table_initialization(group_name)
             GROUPS[group_name] = [from_name] + msg["List"]
+            check_db.update_json_groups(GROUPS)
             print("Group created successfully")
             print("Members: ", GROUPS[group_name])
 
@@ -205,11 +208,11 @@ def handle_message(msg):
         group_name = msg["Name"]
         from_name = msg["From"]
         # Check if the from_name is the group_leader of this group
-        status = check_db.check_group_leader(group_name, from_name)
+        status = from_name == GROUPS[group_name][0]
         if status:  # group leader can delete the group
             del GROUPS[group_name]
             check_db.delete_group_chat(group_name)
-        else:       # others can not delete the group
+        else:  # others can not delete the group
             pass
 
 
@@ -223,12 +226,12 @@ def logout(username):
         USERS.remove(username)
         CLIENT_NAME_TO_ID.pop(username, None)
         # del CLIENT_NAME_TO_ID[username]
-        for k in GROUPS:
-            try:
-                # print(GROUPS[k])
-                GROUPS[k].remove(username)
-            except:
-                continue
+        # for k in GROUPS:
+        #     try:
+        #         # print(GROUPS[k])
+        #         GROUPS[k].remove(username)
+        #     except:
+        #         continue
         print(CLIENT_NAME_TO_ID)
         print(USERS)
         print(GROUPS)

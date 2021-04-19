@@ -26,4 +26,4 @@ def handle_message(msg):
 
 
 if __name__ == "__main__":
-    socket.run(app, debug=True, host="172.20.10.9", port=5000)
+    socket.run(app, debug=True, host="127.0.0.1", port=5000)
