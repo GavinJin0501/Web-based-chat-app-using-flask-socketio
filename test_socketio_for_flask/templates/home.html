@@ -3,9 +3,12 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Chat Room</title>
+	<link rel="stylesheet" href="../static/lib/emojionearea.min.css">
 	<link rel="stylesheet" href="../static/style.css">
-	<script type="text/javascript" src="../static/lib/socket.io.min.js"></script>
 	<script src="../static/lib/jquery.min.js"></script>
+	<script type="text/javascript" src="../static/lib/emojionearea.js"></script>
+	<script type="text/javascript" src="../static/lib/socket.io.min.js"></script>
+
 	<script src="../static/lib/moment.js"></script>
 </head>
 
@@ -32,8 +35,8 @@
 		<div class="framework-box" id="right-bar">
 			<div class="content-box" id="message-box">
 			</div>
-			<div class="content-box" id="type-box">
-				<input type="text" id="myMessage">
+			<div style="overflow:visible;" class="content-box" id="type-box">
+				<textarea type="text" id="myMessage"></textarea>
 				<button id="sendbutton">Send</button>
 			</div>
 		</div>
