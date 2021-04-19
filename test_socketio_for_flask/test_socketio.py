@@ -164,7 +164,7 @@ def handle_message(msg):
                 send(json.dumps(msg), to=CLIENT_NAME_TO_ID[to_name])
 
     # Type 3: Join a private/group chat.
-    # msg = {"Type": "Join", "Chat": "Private/Group", "From": username, "To": xxx, "Current": xxx， "Deputy": 0/1}
+    # msg = {"Type": "Join", "Chat": "Private/Group", "From": username, "To": xxx, "Current": xxx}
     elif msg["Type"] == "Join":
         # print(msg)
         from_name = msg["From"]
@@ -173,18 +173,19 @@ def handle_message(msg):
         if msg["Chat"] == "private":  # to_name is a user name
             check_db.history_table_initialization(check_db.private_db_naming(from_name, to_name))
             history = check_db.get_history(check_db.private_db_naming(from_name, to_name))
-            if history and msg["Deputy"] == 0:
+            if history:
                 send(json.dumps({"Type": 'history', "Content": history}), to=CLIENT_NAME_TO_ID[from_name])
         elif msg["Chat"] == "group":  # to_name is a group name
             history = check_db.get_history(to_name)
-            if history and msg["Deputy"] == 0:
+            if history:
                 # print("send history from join request from" + from_name + " to " + to_name)
                 send(json.dumps({"Type": 'history', "Content": history}), to=CLIENT_NAME_TO_ID[from_name])
             if from_name not in GROUPS[to_name]:
                 GROUPS[to_name].append(from_name)
         # may need to send a notification msg to those involved...
 
-    # Type 4: Create a group chat. msg = {"Type": "Create", "Name": group_name, "From": username}
+    # Type 4: Create a group chat. 
+    # msg = {"Type": "Create", "Name": group_name, "From": username, "List": [a,b,c]}
     elif msg["Type"] == "Create":
         group_name = msg["Name"]
         from_name = msg["From"]
@@ -195,8 +196,9 @@ def handle_message(msg):
         else:
             check_db.update_groups(group_name, from_name)
             check_db.history_table_initialization(group_name)
-            GROUPS[group_name] = [from_name]
+            GROUPS[group_name] = [from_name] + msg["List"]
             print("Group created successfully")
+            print("Members: ", GROUPS[group_name])
 
     # Type 5: Delete a group chat. msg = {"Type": Delete", "Name": group_name, "From": username}
     elif msg["Type"] == "Delete":

@@ -12,7 +12,7 @@ function openBox() {
     if (box.style.zIndex == 1 || box.style.opacity == 1) {
         return;
     }
-
+    
     let userCheckbox = document.getElementById("users-checkbox");
     updateUserList();
     otherUsers.forEach(function(d) {
@@ -56,7 +56,7 @@ function createRoom() {
         return;
     }else {
         const createRoomMessage = {
-            "Type": "Create", "Name": groupName, "From": currentUserName
+            "Type": "Create", "Name": groupName, "From": currentUserName, "List": selectedUsers
         }
         socket.send(JSON.stringify(createRoomMessage));
         setTimeout(() => {
