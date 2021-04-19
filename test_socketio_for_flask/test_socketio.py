@@ -122,7 +122,8 @@ def handle_message(msg):
         user_id = msg["Id"]
         username = msg["Username"]
         CLIENT_NAME_TO_ID[username] = user_id
-        GROUPS['general'].append(username)
+        if username not in GROUPS['general']:
+            GROUPS['general'].append(username)
         check_db.update_json_groups(GROUPS)
         print("New User '%s' has connected to the server." % username)
         print(msg)
@@ -234,7 +235,7 @@ def logout(username):
         #         continue
         print(CLIENT_NAME_TO_ID)
         print(USERS)
-        print(GROUPS)
+        # print(GROUPS)
         check_db.print_segment()
     return redirect('/')
 
