@@ -146,6 +146,15 @@ input[type="text"] {
     /* vertical-align: ; */
 }
 
+textarea#myMessage {
+    resize: none;
+    height: 100%;
+    width: 80% !important;
+    border: none;
+    float: left;
+    font-family: sans-serif;
+}
+
 button#sendbutton {
     /* box-sizing: content-box; */
     border: none;

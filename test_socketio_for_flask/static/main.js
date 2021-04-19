@@ -89,6 +89,14 @@ $(document).ready(function () {
     socket = io.connect('http://127.0.0.1:5000');
     // let promiseUpdate = new Promise(function(resolve, reject){
     updateUserList();
+    // $("#myMessage").emojioneArea({
+    //     pickerPosition: "top",
+    //     filtersPosition: "bottom",
+    //     tones: false,
+    //     autocomplete: false,
+    //     // inline: true,
+    //     hidePickerOnBlur: false
+    // })
     // javascript的async结构太复杂了，
     // 简单粗暴的解决方法，第一次运行updateGroupList的时候
     // 输入一个true，在函数内部的ajax实现selectBar给general的功能
@@ -198,7 +206,7 @@ $(document).ready(function () {
         document.getElementById("message-box").appendChild(messageElement);
         messageElement.scrollIntoView();
         socket.send(JSON.stringify(meInfo));
-        $('#myMessage').val('');
+        $('#myMessage').val("");
     }
 });
 // testing logging out by closing the tab
