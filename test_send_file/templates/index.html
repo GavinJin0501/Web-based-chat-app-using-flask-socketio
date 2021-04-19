@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.0/socket.io.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>    
+    <script type="text/javascript" src="../static/lib/socket.io.min.js"></script>
+    <script src="../static/lib/jquery.min.js"></script>
     <title>Send File</title>
 </head>
 <body>
@@ -20,13 +20,13 @@
         function createImageMessageDOM(data) {
             var img = document.createElement("img");
             img.src = data.binary;
-            img.style.width = '100%';
+            img.style.width = '20%';
             return img;
         }
 
         $(document).ready(function() {
         
-            var socket = io.connect('http://127.0.0.1:5000');
+            var socket = io.connect('http://172.20.10.9:5000')// io.connect('http://127.0.0.1:5000');
             
             function handleFileSelect(ele){
                 var file = ele.target.files[0];
@@ -36,25 +36,25 @@
                     var arrayBuffer = fileReader.result;
                     socket.send(JSON.stringify({
                         Type: "image",
-                        name: file.name, 
-                        type: file.type, 
-                        size: file.size, 
-                        binary: arrayBuffer 
+                        name: file.name,
+                        type: file.type,
+                        size: file.size,
+                        binary: arrayBuffer
                     }));
+                    console.log(file.size);
                     console.log("Send picture.");
                 }
             }
 
 
             socket.on('connect', function() {
-                console.log("Successfully connected socket!")
+                console.log("Successfully connected socket!");
                 socket.send(JSON.stringify({"Type": "connect", "id": socket.id}));
             });
 
             socket.on('message', function(msg) {
                 msg = JSON.parse(msg);
                 if (msg.Type == "image") {
-                    delete msg["Type"];
                     appendImageMessage(msg);
                 }
             });
