@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, send_file
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_socketio import SocketIO, send
 import json
 from datetime import datetime
@@ -164,7 +164,7 @@ def handle_message(msg):
                 send(json.dumps(msg), to=CLIENT_NAME_TO_ID[to_name])
 
     # Type 3: Join a private/group chat.
-    # msg = {"Type": "Join", "Chat": "Private/Group", "From": username, "To": xxx, "Current": xxx}
+    # msg = {"Type": "Join", "Chat": "Private/Group", "From": username, "To": xxx, "Current": xxx， "Deputy": 0/1}
     elif msg["Type"] == "Join":
         # print(msg)
         from_name = msg["From"]
@@ -173,11 +173,11 @@ def handle_message(msg):
         if msg["Chat"] == "private":  # to_name is a user name
             check_db.history_table_initialization(check_db.private_db_naming(from_name, to_name))
             history = check_db.get_history(check_db.private_db_naming(from_name, to_name))
-            if history:
+            if history and msg["Deputy"] == 0:
                 send(json.dumps({"Type": 'history', "Content": history}), to=CLIENT_NAME_TO_ID[from_name])
         elif msg["Chat"] == "group":  # to_name is a group name
             history = check_db.get_history(to_name)
-            if history:
+            if history and msg["Deputy"] == 0:
                 # print("send history from join request from" + from_name + " to " + to_name)
                 send(json.dumps({"Type": 'history', "Content": history}), to=CLIENT_NAME_TO_ID[from_name])
             if from_name not in GROUPS[to_name]:
