@@ -17,6 +17,8 @@ socket = SocketIO(app, cors_allowed_origins='*')
 check_db.drop_table()
 check_db.user_table_initialization()
 check_db.history_table_initialization('general')
+with open("groups.json", "w") as file:
+    pass
 # check_db.delete_group_chat('general')
 
 # Initialize GROUPS
@@ -201,7 +203,7 @@ def handle_message(msg):
         if group_name in GROUPS:
             # Error, name already used
             print("Group name already exists")
-            pass
+            flash("Group name already exists")
         else:
             # check group name if it is not valid
             check_db.history_table_initialization(group_name)
