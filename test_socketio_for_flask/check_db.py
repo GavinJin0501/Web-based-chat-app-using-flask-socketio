@@ -112,13 +112,13 @@ def get_history(id):
     return data
 
 
-def update_history(id, from_name, time, message):
+def update_history(id, from_name, time, message, image=""):
     conn = sqlite3.connect("system_database.db")
     cursor = conn.cursor()
     query = """INSERT INTO [{}]
-               VALUES (\'{}\', \'{}\', \'{}\', '')"""
+               VALUES (\'{}\', \'{}\', \'{}\', \'{}\')"""
     message = message.replace("\'", "\'\'")
-    cursor.execute(query.format(id, from_name, time, message))
+    cursor.execute(query.format(id, from_name, time, message, image))
     conn.commit()
     cursor.close()
     conn.close()

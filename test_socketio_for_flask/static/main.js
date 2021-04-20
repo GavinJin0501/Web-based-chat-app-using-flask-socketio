@@ -129,7 +129,7 @@ $(document).ready(function () {
         // only sends to the currentThread 周四晚上排练前写的 没写完的功能
         const meInfo = {
             "Type": "Send", "From": currentUserName,
-            "To": currentThread.name, "Content": msg, "Chat": currentThread.type
+            "To": currentThread.name, "Content": msg, "Chat": currentThread.type, "is_image": 0
         };
         // 在UI上显示自己发的信息
         let messageElement = appendMessageFromJSON(meInfo);
