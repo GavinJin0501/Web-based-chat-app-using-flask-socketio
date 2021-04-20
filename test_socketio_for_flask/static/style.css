@@ -20,7 +20,7 @@ div#main-box {
 }
 
 div#main-box div {
-    border-color: #aaaaaa;
+    border-color: #d6d6d6;
 }
 
 div#header {
@@ -84,7 +84,7 @@ div#logout-button a {
     text-decoration: none;
 }
 
-div#logout-button img {
+img {
     width: 20px;
     margin: auto;
     filter: invert(1);
@@ -187,11 +187,19 @@ span.message-element-time {
 }
 
 p.message-element-content {
-    margin-left: 8%;
+    margin-left: 2%;
     padding: 2%;
-    width: 70%;
+    width: 65%;
     border-radius: 10px;
     background-color: rgb(224, 224, 224);
+}
+
+p.message-element-content-mine {
+    margin-left: 26%;
+    padding: 2%;
+    width: 65%;
+    border-radius: 10px;
+    background-color: rgb(198, 213, 230);
 }
 
 h4.sidebar-element-name {
@@ -240,7 +248,7 @@ button {
     transition: background-color 0.5s;
 }
 
-button:hover{
+button:hover {
     cursor: pointer;
 }
 
@@ -251,30 +259,61 @@ button#createbutton:hover {
 }
 
 div#selection-box {
+    left: 30%;
+    border-right: 1px solid;
+    /* height: 200px; */
+    /* background-color: black; */
+}
+
+div#more-info-box {
+    height: 200px;
+    right: 16px;
+    top: calc(20% - 10px);
+    border: 1px solid;
+    /* padding-left: 2%; */
+    overflow: scroll;
+}
+
+div#more-info-box > h4 {
+    margin-left: 2%;
+}
+
+div#members-list {
+    height: 100px;
+    overflow-y: scroll;
+}
+
+div#members-list>div {
+    margin: 2%;
+}
+
+div#members-list > div:hover {
+    transition: all 0.2s;
+    cursor: pointer;
+    background-color: rgb(243, 243, 243);
+}
+
+div.pop-up {
     position: absolute;
     z-index: -1;
     opacity: 0;
-    left: 30%;
     width: 200px;
-    /* height: 200px; */
-    /* background-color: black; */
     background-color: hsla(0, 0%, 100%, .75);
     -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
     border-bottom: 1px solid;
-    border-right: 1px solid;
     transition: all 0.5s;
 }
 
 div#users-checkbox {
     border-bottom: 1px solid;
-    overflow: scroll; 
-    width: 100%; 
+    overflow: scroll;
+    width: 100%;
     height: 100px;
 }
 
 
-div#deciding-buttons button{
+div#deciding-buttons button {
     border: none;
     width: 50%;
     height: 30px;
@@ -291,7 +330,8 @@ div#deciding-buttons button{
     background-color: rgb(199, 199, 199);
 }
 
-#accept-button:hover, #sendbutton:hover {
+#accept-button:hover,
+#sendbutton:hover {
     background-color: rgb(83, 165, 117);
 }
 
@@ -300,3 +340,37 @@ div#deciding-buttons button{
     height: 30px;
 }
 
+#more-info-button {
+    position: absolute;
+    float: right;
+    right: 0;
+    border: none;
+    font-size: 20px;
+    margin-top: 10px;
+    margin-right: 16px;
+    border-radius: 10px;
+}
+
+#more-info-button:hover {
+    background-color: rgb(209, 209, 209);
+}
+
+#image-sending {
+    position: absolute;
+    left: calc(30% + 5px);
+    top: calc(80% - 24px);
+    background: rgb(93, 145, 214);
+    border: none;
+    border-radius: 10px;
+    padding: 6px;
+}
+
+#image-sending:hover {
+    cursor: pointer;
+    background-color: rgb(64, 116, 184);
+}  
+
+#image-sending > img {
+    width: 12px;
+    
+}
