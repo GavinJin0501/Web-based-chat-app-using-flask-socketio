@@ -134,15 +134,14 @@ $(document).ready(function () {
 
 
     function sendMessage() {
-        if(Math.random() < 0.3) {
-            changeColor();
-        }
-
         console.log('Send message');
         msg = $('#myMessage').val();
         if (msg.length == 0) {
             alert("No empty message.")
             return;
+        }
+        if (/\p{Extended_Pictographic}/u.test(msg)) {
+            changeColor();
         }
         // $("#messages").append('<li>' + msg + '</li>');
         // only sends to the currentThread 周四晚上排练前写的 没写完的功能

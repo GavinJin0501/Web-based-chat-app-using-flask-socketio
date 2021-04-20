@@ -25,10 +25,17 @@ function openInfo() {
 }
 
 document.getElementById("main-box").addEventListener("click", function (event) {
-    if (!(document.getElementById("more-info-box").contains(event.target) || event.target == document.getElementById("more-info-button"))) {
+    if (!(document.getElementById("more-info-box").contains(event.target) 
+    || event.target == document.getElementById("more-info-button"))) {
         closeInfo();
     }
+    // console.log(event.target)
+    if (!(document.getElementById("emoji-box").contains(event.target) 
+    || document.getElementById("emoji-button").contains(event.target))) {
+        closeEmoji();
+    }
 });
+
 
 function closeInfo() {
     let box = document.getElementById("more-info-box");
@@ -40,6 +47,45 @@ function closeInfo() {
         box.style.zIndex = -1;
     }, 500);
 }
+
+function openEmoji() {
+    let box = document.getElementById("emoji-box");
+    if (box.style.zIndex == 1 || box.style.opacity == 1) {
+        return
+    }
+    console.log(box.hasChildNodes())
+    if (!box.hasChildNodes()) {
+        let emojiList = getAllEmoji();
+        emojiList.forEach(function(e) {
+            let choice = document.createElement("div");
+            choice.className = "emoji-cell";
+            choice.innerHTML = e;
+            choice.setAttribute("onclick", "chooseEmoji(this)");
+            box.appendChild(choice);
+        })
+    }
+    box.style.opacity = 1;
+    box.style.zIndex = 1;
+}
+
+function chooseEmoji(node) {
+    console.log(node.innerHTML);
+    let textarea = document.getElementById("myMessage");
+    insertAtCursor(textarea, node.innerHTML);
+}
+
+function closeEmoji () {
+    let box = document.getElementById("emoji-box");
+    // box.innerHTML = "";
+    if (box.style.zIndex == -1 || box.style.opacity == 0) return;
+
+    box.style.opacity = 0;
+    setTimeout(function () {
+        box.style.zIndex = -1;
+    }, 500);
+}
+
+
 
 function openBox() {
     let box = document.getElementById("selection-box");
@@ -119,4 +165,33 @@ function changeColor() {
     let chordAudio = document.getElementById("chord-audio");
     chordAudio.play();
     document.body.style.backgroundColor = `hsl(${Math.random() * 360}, 60%, 60%)`;
+}
+
+
+function getAllEmoji() {
+    let L = [];
+    let start = 0x1f600;
+    for (let i = start; i < start + 80; i++) {
+        L.push(String.fromCodePoint(i));
+    }
+    return L;
+}
+
+function insertAtCursor(myField, myValue) {
+    //IE support
+    if (document.selection) {
+        myField.focus();
+        sel = document.selection.createRange();
+        sel.text = myValue;
+    }
+    //MOZILLA and others
+    else if (myField.selectionStart || myField.selectionStart == '0') {
+        var startPos = myField.selectionStart;
+        var endPos = myField.selectionEnd;
+        myField.value = myField.value.substring(0, startPos)
+            + myValue
+            + myField.value.substring(endPos, myField.value.length);
+    } else {
+        myField.value += myValue;
+    }
 }

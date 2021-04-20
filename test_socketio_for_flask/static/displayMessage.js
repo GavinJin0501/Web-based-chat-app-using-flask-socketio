@@ -35,6 +35,9 @@ function appendMessageFromJSON(message) {
     
     if(message.is_image == 0) {
         content.innerHTML = message.Content;
+        if (/\p{Extended_Pictographic}/u.test(message.Content) && message.Content.length <= 2) {
+            content.style.fontSize = "5em";
+        }
     }else{
         let img = document.createElement("img");
         img.src = message.Content;

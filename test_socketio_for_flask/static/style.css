@@ -84,7 +84,7 @@ div#logout-button a {
     text-decoration: none;
 }
 
-#logout-button > img {
+#logout-button>img {
     width: 20px;
     margin: auto;
     filter: invert(1);
@@ -274,7 +274,7 @@ div#more-info-box {
     overflow: scroll;
 }
 
-div#more-info-box > h4 {
+div#more-info-box>h4 {
     margin-left: 2%;
 }
 
@@ -287,7 +287,7 @@ div#members-list>div {
     margin: 2%;
 }
 
-div#members-list > div:hover {
+div#members-list>div:hover {
     transition: all 0.2s;
     cursor: pointer;
     background-color: rgb(243, 243, 243);
@@ -369,9 +369,9 @@ div#deciding-buttons button {
 #image-sending:hover {
     cursor: pointer;
     background-color: rgb(64, 116, 184);
-}  
+}
 
-#image-sending > img {
+#image-sending>img {
     width: 12px;
     margin: auto;
     filter: invert(1);
@@ -380,4 +380,53 @@ div#deciding-buttons button {
 img.content-image {
     width: 100%;
     border-radius: 8px;
+}
+
+#emoji-button>img {
+    width: 14px;
+    margin: auto;
+    filter: invert(1);
+}
+
+#emoji-button {
+    position: absolute;
+    left: calc(30% + 5px);
+    top: calc(80% - 52px);
+    background: rgb(93, 145, 214);
+    border: none;
+    border-radius: 10px;
+    padding: 5px;
+    transition: background-color 0.5s;
+}
+
+#emoji-button:hover {
+    cursor: pointer;
+    background-color: rgb(64, 116, 184);
+}
+
+#emoji-box {
+    display: flex;
+    border: 1px solid;
+    left: calc(30% + 35px);
+    top: calc(80% - 200px);
+    height: 200px;
+    padding: 5px;
+    flex-wrap: wrap;
+    overflow: scroll;
+}
+
+.emoji-cell {
+    cursor: pointer;
+    margin: 1px;
+    font-size: 1.2em;
+    width: 30px;
+    height: 30px;
+    /* background-color: rgb(245, 245, 245); */
+    text-align: center;
+    vertical-align: middle;
+    transition: all 0.2s;
+}
+
+.emoji-cell:hover {
+    background-color: rgb(209, 209, 209);
 }

@@ -53,17 +53,13 @@
 		</div>
 		<button id="more-info-button" onclick="openInfo()">···</button>
 		<div class="pop-up" id="more-info-box">
-			<!-- <h4>members</h4>
-			<div id="members-list">
-				<div>😌 the</div>
-				<div>the</div>
-				<div>the</div>
-				<div>the</div>
-
-			</div> -->
 
 		</div>
-		<input type="file" id="file-uploader" hidden accept="image/*"/>
+		<button id="emoji-button" onclick="openEmoji()">
+			<img src="../static/happy.png" alt="emoji-icon">
+		</button>
+		<div class="pop-up" id="emoji-box"></div>
+		<input type="file" id="file-uploader" hidden accept="image/*" />
 		<label for="file-uploader" id="image-sending">
 			<img src="../static/gallery.png" alt="image-sending-icon">
 		</label>
