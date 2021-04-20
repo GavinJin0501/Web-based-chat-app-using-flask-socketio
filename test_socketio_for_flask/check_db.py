@@ -99,14 +99,16 @@ def history_table_initialization(id):
 
 
 def get_history(id):
+    # (from, time, message, image)
     conn = sqlite3.connect("system_database.db")
     cursor = conn.cursor()
     query = """SELECT * FROM [{}]"""
     cursor.execute(query.format(id))
-    data = []
-    for each in cursor.fetchall():
-        data.append(each[1] + " " + each[0] + ": " + each[2])
+    # data = []
+    # for each in cursor.fetchall():
+    #     data.append(each[1] + " " + each[0] + ": " + each[2])
     # print(data)
+    data = cursor.fetchall()
     cursor.close()
     conn.close()
     return data
