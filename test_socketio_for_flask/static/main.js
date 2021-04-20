@@ -107,14 +107,14 @@ $(document).ready(function () {
             // $("#messages").append('<li>' + temp + '</li>');
         } else if (msg.Type == "history") {
             console.log("Receive history");
-            console.log(msg)
+            console.log(msg);
             msg.Content.forEach(function (element, i) {
-                let splited = element.split(" ");
-                console.log(splited);
+                // 收到history的tuple
                 let jsonMsg = {
-                    Time: splited[0] + " " + splited[1],
-                    From: splited[2].slice(0,-1),
-                    Content: splited.slice(3).join(" ")
+                    Time: element[1],
+                    From: element[0],
+                    Content: element[2] || element[3],
+                    is_image: element[2] ? 0 : 1
                 }
                 document.getElementById("message-box").appendChild(appendMessageFromJSON(jsonMsg));
             });
