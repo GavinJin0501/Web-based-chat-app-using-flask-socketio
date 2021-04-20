@@ -33,7 +33,15 @@ function appendMessageFromJSON(message) {
         content.className = "message-element-content";
     }
     
-    content.innerHTML = message.Content;
+    if(message.is_image == 0) {
+        content.innerHTML = message.Content;
+    }else{
+        let img = document.createElement("img");
+        img.src = message.Content;
+        img.className = "content-image"
+        content.appendChild(img);
+    }
+    
 
     messageElement.appendChild(content);
     return messageElement; // return a html node

@@ -84,7 +84,7 @@ div#logout-button a {
     text-decoration: none;
 }
 
-img {
+#logout-button > img {
     width: 20px;
     margin: auto;
     filter: invert(1);
@@ -373,5 +373,11 @@ div#deciding-buttons button {
 
 #image-sending > img {
     width: 12px;
-    
+    margin: auto;
+    filter: invert(1);
+}
+
+img.content-image {
+    width: 100%;
+    border-radius: 8px;
 }
