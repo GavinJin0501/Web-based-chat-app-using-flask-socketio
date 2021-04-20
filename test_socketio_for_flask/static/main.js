@@ -82,6 +82,8 @@ function closeBox() {
 
 
 function changeColor() {
+    let chordAudio = document.getElementById("chord-audio");
+    chordAudio.play();
     document.body.style.backgroundColor = `hsl(${Math.random()*360}, 60%, 60%)`;
 }
 
@@ -142,6 +144,7 @@ $(document).ready(function () {
                     // document.getElementById("message-box").appendChild(appendMessageFromJSON(msg));
                 } 
                 else {
+                    document.getElementById("drip-audio").play();
                     let targetThread = grouplist.find(obj => obj.name == msg.To);
                     incrementUnread(targetThread);
                 }
@@ -154,6 +157,7 @@ $(document).ready(function () {
                     // document.getElementById("message-box").appendChild(appendMessageFromJSON(msg));
                 }
                 else {
+                    document.getElementById("drip-audio").play();
                     let targetThread = otherUsers.find(obj => obj.name == msg.From);
                     incrementUnread(targetThread);
                 }
@@ -330,7 +334,7 @@ function updateGroupList(select, name) {
                     if (select && key == name) {
                         selectBar(groupTab);
                     }
-                    grouplist.push({ "name": key, "node": groupTab, "unreadNum": 0});
+                    grouplist.push({ "name": key, "node": groupTab, "unreadNum": 0, "members": value});
                 }
             }
         }
