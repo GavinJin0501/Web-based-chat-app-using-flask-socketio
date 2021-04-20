@@ -42,7 +42,7 @@
 				<button id="sendbutton">Send</button>
 			</div>
 		</div>
-		<div id="selection-box">
+		<div class="pop-up" id="selection-box">
 			<div id="users-checkbox">
 			</div>
 			<input type="text" placeholder="group name" id="create-group-text">
@@ -51,20 +51,22 @@
 				<button id="accept-button" onclick="createRoom()">create</button>
 			</div>
 		</div>
+		<button id="more-info-button" onclick="openInfo()">···</button>
+		<div class="pop-up" id="more-info-box">
+			<!-- <h4>members</h4>
+			<div id="members-list">
+				<div>😌 the</div>
+				<div>the</div>
+				<div>the</div>
+				<div>the</div>
+
+			</div> -->
+
+		</div>
+		<button id="image-sending">
+			<img src="../static/gallery.png" alt="image-sending-icon">
+		</button>
 	</div>
-
-
-
-
-
-	<style type="text/css">
-		table,
-		th,
-		td {
-			border: 1px solid black;
-		}
-	</style>
-
 
 
 	<script>
@@ -72,7 +74,7 @@
 		var currentUserName = "{{username}}";
 	</script>
 
-
+	<script type="text/javascript" src="../static/clickInteraction.js"></script>
 	<script type="text/javascript" src="../static/main.js"></script>
 	<script type="text/javascript" src="../static/displayMessage.js"></script>
 

@@ -25,8 +25,14 @@ function appendMessageFromJSON(message) {
 
     messageElement.appendChild(title);
     
+    
     let content = document.createElement("p");
-    content.className = "message-element-content";
+    if (message.From == currentUserName) {
+        content.className = "message-element-content-mine";
+    } else{
+        content.className = "message-element-content";
+    }
+    
     content.innerHTML = message.Content;
 
     messageElement.appendChild(content);
