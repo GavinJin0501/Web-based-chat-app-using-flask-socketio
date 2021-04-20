@@ -121,6 +121,10 @@ $(document).ready(function () {
 
         console.log('Send message');
         msg = $('#myMessage').val();
+        if (msg.length == 0) {
+            alert("No empty message.")
+            return;
+        }
         // $("#messages").append('<li>' + msg + '</li>');
         // only sends to the currentThread 周四晚上排练前写的 没写完的功能
         const meInfo = {
