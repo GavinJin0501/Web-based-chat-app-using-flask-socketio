@@ -156,12 +156,16 @@ def handle_message(msg):
         if msg["Chat"] == "group":
             if msg["is_image"] == 0:
                 check_db.update_history(to_name, from_name, curr_time, content, "")
+            else:
+                check_db.update_history(to_name, from_name, curr_time, "", content)
             for each in GROUPS[to_name]:
                 if each != from_name and CLIENT_NAME_TO_ID.get(each, False):
                     send(json.dumps(msg), to=CLIENT_NAME_TO_ID[each])
         # case 2: to a private user
         else:
             if msg["is_image"] == 0:
+                check_db.update_history(check_db.private_db_naming(from_name, to_name), from_name, curr_time, content, "")
+            else:
                 check_db.update_history(check_db.private_db_naming(from_name, to_name), from_name, curr_time, content, "")
             # only forward the msg if the destination user is online:
             if CLIENT_NAME_TO_ID.get(to_name, False):
@@ -228,13 +232,6 @@ def logout(username):
         print("User '%s' logs out." % username)
         USERS.remove(username)
         CLIENT_NAME_TO_ID.pop(username, None)
-        # del CLIENT_NAME_TO_ID[username]
-        # for k in GROUPS:
-        #     try:
-        #         # print(GROUPS[k])
-        #         GROUPS[k].remove(username)
-        #     except:
-        #         continue
         print(CLIENT_NAME_TO_ID)
         print(USERS)
         # print(GROUPS)
