@@ -1,18 +1,60 @@
 <html>
 <head>
+	<link rel="stylesheet" href="../static/style.css">
 </head>
 <body>
+	<style>
+		a {
+			display: block;
+			border-radius: 10px;
+			position: absolute;
+			text-align: center;
+			left: 0;
+			top: 0;
+			background-color:rgb(238, 97, 97);
+			width: 50px;
+			margin: auto;
+			/* padding: 10px; */
+			margin-top: 20px; 
+			margin-left: 20px;
+			text-decoration: none;
+			color: white;
+			transition: all 0.5s;
+		}
+		input, p{
+			display: block;
+			margin: auto;
+			border: 0;
+			border-radius: 10px;
+			padding: 10px;
+			width: 80%;
+		}
+		input[type="text"] {
+			margin-top: 10%;
+		}
+		input[type="submit"] {
+			cursor: pointer;
+			background-color: rgb(93, 145, 214);
+			transition: all 0.5s;
+			color: white;
+		}
+		input[type="submit"]:hover{
+			background-color: rgb(64, 116, 184);
+		}
+	</style>
+<div style="width: 500px; max-width: 50%; height: 40%; padding-top: 2%;" id="main-box">
 <form action="/loginAuth" method="POST">
 	<input type="text" name = "username" placeholder="username" required/> </br>
 	<input type="password" name = "password" placeholder="password" required/></br>
-	<input type="submit" value = Login />
 	{% if error %}
-		<p class="error"><strong>Error:</strong> {{error}}</p>
+	<p class="error"><strong style="color: rgb(238, 97, 97);">Error:</strong> {{error}}</p>
 	{% endif %}
+	<input type="submit" value = Login />
+	
 </form>
 
-<a href="/">Go back</a>
-
+<a href="/">⬅︎</a>
+</div>
 </body>
 
 

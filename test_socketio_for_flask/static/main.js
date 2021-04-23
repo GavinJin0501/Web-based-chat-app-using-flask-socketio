@@ -128,6 +128,7 @@ $(document).ready(function () {
     $('#sendbutton').on('click', sendMessage);
     $('#myMessage').on('keypress', function (e) {
         if (e.which == 13 || e.keyCode == 13) {
+            e.preventDefault();
             sendMessage();
         }
     });

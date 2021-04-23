@@ -1,22 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Chat Room</title>
-</head>
-<body>
-{% with message = get_flashed_messages() %}
-	{% if not message %}
-		<p class="message">{{"Welcome to our chat app"}}</p>
-		<a href="/login">Login</a>
-		<a href="/register">Register</a>
-	{% endif %}
 
-	{% if message %}
-		<p class="message">{{message}}</p>
-		<a href="/login">Login</a>
-		<a href="/register">Register</a>
-	{% endif %}
-{% endwith %}
+<head>
+	<meta charset="UTF-8">
+	<title>Chat Room</title>
+	<link rel="stylesheet" href="../static/style.css">
+</head>
+
+<body>
+	<style>
+		a {
+			display: block;
+			border-radius: 10px;
+			text-align: center;
+			
+			width: 50%;
+			margin: auto;
+			padding: 10px;
+			margin-top: 20px; 
+			text-decoration: none;
+			color: white;
+			font-size: 1.2em;
+			transition: all 0.5s;
+		}
+		#login{
+			background-color: rgb(93, 145, 214);
+		}
+		#login:hover {
+			background-color: rgb(64, 116, 184);
+		}
+		#register:hover{
+			background-color: rgb(83, 165, 117);
+		}
+		#register {
+			background-color: rgb(119, 192, 150);
+		}
+	</style>
+	<div style="width: 500px; max-width: 50%; height: 400px;" id="main-box">
+		{% with message = get_flashed_messages() %}
+			{% if not message %}
+				<p style="text-align: center; font-weight: bold; font-size: 2em;" class="message">{{"Welcome to our chat app"}}</p>
+			{% endif %}
+
+			{% if message %}
+				<p style="text-align: center;" class="message">{{message}}</p>
+			{% endif %}
+		{% endwith %}
+		<a id="login" href="/login">Login</a>
+		<a id="register" href="/register">Register</a>
+	</div>
 </body>
+
 </html>
