@@ -14,11 +14,11 @@ app.secret_key = "my secret key"
 socket = SocketIO(app, cors_allowed_origins='*')
 
 # Initialize database
-check_db.drop_table()
+# check_db.drop_table()
 check_db.user_table_initialization()
 check_db.history_table_initialization('general')
-with open("groups.json", "w") as file:
-    pass
+# with open("groups.json", "w") as file:
+#     pass
 # check_db.delete_group_chat('general')
 
 # Initialize GROUPS
