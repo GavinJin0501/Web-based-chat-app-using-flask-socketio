@@ -53,6 +53,7 @@ def login_check(username, password):
     conn = sqlite3.connect("system_database.db")
     cursor = conn.cursor()
     query = "SELECT * FROM `Users` WHERE `username` = \'{}\'"
+    username = username.replace("\'", "\'\'")
     cursor.execute(query.format(username))
     data = cursor.fetchall()
     cursor.close()
@@ -66,6 +67,7 @@ def register_check(username):
     conn = sqlite3.connect("system_database.db")
     cursor = conn.cursor()
     query = "SELECT * FROM `Users` WHERE `username` = \'{}\'"
+    username = username.replace("\'", "\'\'")
     cursor.execute(query.format(username))
     data = cursor.fetchall()
     cursor.close()
@@ -77,6 +79,7 @@ def register(username, password):
     conn = sqlite3.connect("system_database.db")
     cursor = conn.cursor()
     query = "INSERT INTO `Users` VALUES(\'{}\', \'{}\')"
+    username = username.replace("\'", "\'\'")
     cursor.execute(query.format(username, generate_password_hash(password, PASSWORD_HASH)))
     conn.commit()
     cursor.close()
@@ -87,7 +90,7 @@ def register(username, password):
 def history_table_initialization(id):
     conn = sqlite3.connect("system_database.db")
     cursor = conn.cursor()
-    query = """CREATE TABLE IF NOT EXISTS {}(
+    query = """CREATE TABLE IF NOT EXISTS [{}](
                             `from`        VARCHAR(10),
                             `time`        DATETIME,
                             `message`     VARCHAR(256) DEFAULT "",

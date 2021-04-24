@@ -124,7 +124,7 @@ def handle_message(msg):
         user_id = msg["Id"]
         username = msg["Username"]
         CLIENT_NAME_TO_ID[username] = user_id
-        if username not in GROUPS['general']:
+        if username not in GROUPS.get('general', []):
             GROUPS['general'].append(username)
         check_db.update_json_groups(GROUPS)
         print("New User '%s' has connected to the server." % username)
@@ -137,10 +137,6 @@ def handle_message(msg):
         curr_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         msg["Content"] = content
         msg["Time"] = curr_time
-        # print("Boradcast to everyone in the general channel")
-        # for each in GROUPS['general']:
-        #     if CLIENT_NAME_TO_ID.get(each, False):
-        #         send(json.dumps(msg), to=CLIENT_NAME_TO_ID[each])
 
     # Type 2: Send information to others.
     # msg = {"Type": "Send", "From": from_user, "To": destination, "Content": content, "Chat": private/group, "is_image": 0/1}
@@ -160,7 +156,7 @@ def handle_message(msg):
                 check_db.update_history(to_name, from_name, curr_time, content, "")
             else:
                 check_db.update_history(to_name, from_name, curr_time, "", content)
-            for each in GROUPS[to_name]:
+            for each in GROUPS.get(to_name, []):
                 if each != from_name and CLIENT_NAME_TO_ID.get(each, False):
                     send(json.dumps(msg), to=CLIENT_NAME_TO_ID[each])
         # case 2: to a private user
@@ -190,7 +186,7 @@ def handle_message(msg):
             if history:
                 # print("send history from join request from" + from_name + " to " + to_name)
                 send(json.dumps({"Type": 'history', "Content": history}), to=CLIENT_NAME_TO_ID[from_name])
-            if from_name not in GROUPS[to_name]:
+            if GROUPS.get(to_name, []) and from_name not in GROUPS[to_name]:
                 GROUPS[to_name].append(from_name)
                 check_db.update_json_groups(GROUPS)
         # may need to send a notification msg to those involved...
@@ -200,7 +196,7 @@ def handle_message(msg):
     elif msg["Type"] == "Create":
         group_name = msg["Name"]
         from_name = msg["From"]
-        if group_name in GROUPS:
+        if group_name in GROUPS or not group_name:
             # Error, name already used
             print("Group name already exists")
             flash("Group name already exists")
@@ -217,10 +213,11 @@ def handle_message(msg):
         group_name = msg["Name"]
         from_name = msg["From"]
         # Check if the from_name is the group_leader of this group
-        status = from_name == GROUPS[group_name][0]
+        status = (from_name == GROUPS[group_name][0])
         if status:  # group leader can delete the group
             del GROUPS[group_name]
             check_db.delete_group_chat(group_name)
+            check_db.update_json_groups(GROUPS)
         else:  # others can not delete the group
             pass
 
