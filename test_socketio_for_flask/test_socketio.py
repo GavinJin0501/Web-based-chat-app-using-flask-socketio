@@ -221,6 +221,7 @@ def handle_message(msg):
         if status:  # group leader can delete the group
             del GROUPS[group_name]
             check_db.delete_group_chat(group_name)
+            check_db.update_json_groups(GROUPS)
         else:  # others can not delete the group
             pass
 
