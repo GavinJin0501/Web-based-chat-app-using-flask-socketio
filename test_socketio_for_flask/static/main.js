@@ -177,7 +177,13 @@ function selectBar(node) {
     document.getElementById("message-box").innerHTML = "";
     
     if (node.children.length > 1 ) {
-        node.removeChild(node.children[1]);
+        for (i = 1; i < node.children.length; i++) {
+            if (node.children[i].tagName != "BUTTON") {
+                node.removeChild(node.children[i]);
+            }
+        }
+        
+        
     }
     
 
@@ -223,6 +229,9 @@ function updateUserList() {
             let removingUsers = otherUsers.filter(u => !data.userlist.includes(u.name));
             removingUsers.forEach(function (u) {
                 // let removingChild = document.getElementById(u + "-user-element");
+                if (u.node.id = "selected-sidebar") {
+                    selectBar(grouplist.find(g => g.name == "general").node);
+                }
                 document.getElementById("all-active-users-box").removeChild(u.node);
             });
             otherUsers = otherUsers.filter(u => data.userlist.includes(u.name));
@@ -263,9 +272,23 @@ function updateGroupList(select, name) {
                 }
                 return false;
             }
+            let removingGroups = grouplist.filter(u => !Object.keys(data.grouplist).includes(u.name));
+            removingGroups.forEach(function (u) {
+                if (u.node.id = "selected-sidebar") {
+                    selectBar(grouplist.find(g => g.name == "general").node);
+                }
+                console.log(u.node);
+                // let removingChild = document.getElementById(u + "-user-element");
+                document.getElementById("all-groups-box").removeChild(u.node);
+            });
+            grouplist = grouplist.filter(u => Object.keys(data.grouplist).includes(u.name));
             for (const [key, value] of Object.entries(data.grouplist)) {
                 if (checkExistence(key)) {
-                    continue;
+                    grouplist.forEach(function(g) {
+                        if (g.name == key) {
+                            g.members = value;
+                        }
+                    })
                 } else {
                     let groupTab = document.createElement('div');
                     groupTab.className = 'sidebar-element';
@@ -279,9 +302,29 @@ function updateGroupList(select, name) {
                     if (select && key == name) {
                         selectBar(groupTab);
                     }
+
+                    if (key != "general" && currentUserName == value[0]) {
+                        console.log(key, currentUserName);
+                        let minusButton = document.createElement('button');
+                        minusButton.className = "add-minus-button";
+                        minusButton.innerHTML = "–";
+                        minusButton.setAttribute("onclick", "deleteGroup(this)");
+                        groupTab.appendChild(minusButton);
+                    }
+
                     grouplist.push({ "name": key, "node": groupTab, "unreadNum": 0, "members": value});
                 }
             }
         }
     })
+}
+
+
+function deleteGroup(node) {
+    console.log(node.previousSibling.innerHTML);
+    const deleteMessage = {
+        "Type": "Delete", "Name": node.previousSibling.innerHTML, "From": currentUserName
+    }
+    socket.send(JSON.stringify(deleteMessage));
+    setTimeout(updateGroupList, 100);
 }

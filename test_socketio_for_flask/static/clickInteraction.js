@@ -4,6 +4,7 @@ function openInfo() {
         return
     }
     if (currentThread.type == "group") {
+        updateGroupList();
         let title = document.createElement("h4");
         title.innerHTML = "members";
         box.appendChild(title);
@@ -18,7 +19,19 @@ function openInfo() {
             let tab = document.createElement("div");
             tab.innerHTML = n;
             membersList.appendChild(tab);
-        })
+            tab.addEventListener("click",function() {
+                let found = otherUsers.find(d => d.name == n);
+                if (found) {
+                    selectBar(found.node);
+                    closeInfo();
+                };
+            });
+        });
+    }
+    if (currentThread.type == "private") {
+        let title = document.createElement("h4");
+        title.innerHTML = currentThread.name;
+        box.appendChild(title);
     }
     box.style.opacity = 1;
     box.style.zIndex = 1;
@@ -35,6 +48,7 @@ document.getElementById("main-box").addEventListener("click", function (event) {
         closeEmoji();
     }
 });
+
 
 
 function closeInfo() {
@@ -134,7 +148,12 @@ function createRoom() {
         alert("group name exists!");
         $('#create-group-text').val('');
         return;
-    } else {
+    } else if (!/^[a-zA-Z _]*$/.test(groupName)){
+        alert("only characters and space!");
+        $('#create-group-text').val('');
+        return;
+    } 
+    else {
         const createRoomMessage = {
             "Type": "Create", "Name": groupName, "From": currentUserName, "List": selectedUsers
         }

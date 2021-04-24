@@ -234,13 +234,25 @@ div.box-tag {
     opacity: 0.8;
 }
 
-button#createbutton {
+#create-button {
     background-color: rgb(93, 145, 214);
     border-radius: 10px;
     border: none;
     color: white;
     float: right;
     margin-top: 0.3em;
+}
+
+
+
+button.add-minus-button {
+    background-color: rgb(93, 145, 214);
+    border-radius: 10px;
+    border: none;
+    color: white;
+    float: right;
+    margin-top: 24px;
+    margin-right: 3%;
     /* font-size: 1.2em; */
 }
 
