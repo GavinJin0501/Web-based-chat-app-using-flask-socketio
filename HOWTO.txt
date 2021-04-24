@@ -11,4 +11,4 @@ chat_app/app.py -> line 237 -> socket.run(app, host="YOUR ADDRESS", port=YOUR PO
 chat_app/static/main.js -> line 13 -> socket = io.connect('YOUR ADDRESS');
 
 3. How to run:
-After the second step, simply run the command: "make run" in the terminal (with path in this big folder)
+After the second step, simply run the command: "make run" in the terminal (with path in the parent folder)
