@@ -4,11 +4,11 @@ Python can be obtained for the https://www.python.org.
 
 
 2. How to configure:
-Open a terminal and change to the directory of this folder. Execute the following command: "make -f makefile"
+Open a terminal and change to the directory of this folder 2021-Spring-Computer-Networking-Project. Execute the following command: "make -f makefile"
 Our app is by default run on localhost at port 5000.
 However, if you want to run this app on another local network (we have at least tested on hotspot), you have to maunally configure the address in the file:
-chat_app/app.py -> line 237 -> socket.run(app, host="YOUR ADDRESS", port=YOUR PORT, debug=True)
-chat_app/static/main.js -> line 13 -> socket = io.connect('YOUR ADDRESS');
+app.py -> line 237 -> socket.run(app, host="YOUR ADDRESS", port=YOUR PORT, debug=True)
+static/main.js -> line 13 -> socket = io.connect('YOUR ADDRESS');
 
 3. How to run:
-After the second step, simply run the command: "make run" in the terminal (with path in the parent folder)
+After the second step, simply run the command: "make run" in the terminal (with path in the folder 2021-Spring-Computer-Networking-Project)

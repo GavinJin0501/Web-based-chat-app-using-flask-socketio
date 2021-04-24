@@ -12,7 +12,7 @@ $(VENV)/bin/activate: requirements.txt
 venv: $(VENV)/bin/activate
 
 run: venv
-	./$(VENV)/bin/python3 chat_app/app.py
+	./$(VENV)/bin/python3 app.py
 
 clean:
 	rm -rf $(VENV)
