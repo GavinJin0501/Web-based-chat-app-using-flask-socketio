@@ -30,10 +30,10 @@ List of files submitted:
 
 
     1.2   templates:
-        1.1.2.1   home.html
-        1.1.2.2   index.html
-        1.1.2.3   login.html
-        1.1.2.4   register.html
+        1.2.1   home.html
+        1.2.2   index.html
+        1.2.3   login.html
+        1.2.4   register.html
 
     1.3   app.py
     1.4   check_db.py
