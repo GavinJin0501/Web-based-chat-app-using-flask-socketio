@@ -1,0 +1,13 @@
+1. How to install:
+The basic requirement is to have Python >= 3.6.
+Python can be obtained for the https://www.python.org.
+
+
+2. How to configure:
+Open a terminal and change to the directory of this folder. Execute the following command: "make -f makefile"
+Our app is by default run on localhost at port 5000.
+However, if you want to run this app on another local network (e.g. via hotspot), you have to maunally configure the address in the file:
+
+
+3. How to run:
+After the second step, simply run the command: "make run" in the terminal (with path in this big folder)
