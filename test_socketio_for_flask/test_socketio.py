@@ -98,7 +98,7 @@ def home(username):
             flash("Don't cheat! Login first!")
             return redirect(url_for("initial"))
         post = "Hello Hello"
-        return render_template('home.html', username=username, post=post)
+        return render_template('home.html', username=username)
     else:
         flash("Don't cheat! Login first!")
         return redirect(url_for("initial"))
@@ -128,15 +128,10 @@ def handle_message(msg):
             GROUPS['general'].append(username)
         check_db.update_json_groups(GROUPS)
         print("New User '%s' has connected to the server." % username)
-        print(msg)
+        # print(msg)
         # print(CLIENT_NAME_TO_ID)
         # print(USERS)
-        check_db.print_segment()
-
-        content = "Hello, everyone. I am in."
-        curr_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        msg["Content"] = content
-        msg["Time"] = curr_time
+        # check_db.print_segment()
 
     # Type 2: Send information to others.
     # msg = {"Type": "Send", "From": from_user, "To": destination, "Content": content, "Chat": private/group, "is_image": 0/1}
@@ -165,7 +160,7 @@ def handle_message(msg):
             if msg["is_image"] == 0:
                 check_db.update_history(check_db.private_db_naming(from_name, to_name), from_name, curr_time, content, "")
             else:
-                check_db.update_history(check_db.private_db_naming(from_name, to_name), from_name, curr_time, content, "")
+                check_db.update_history(check_db.private_db_naming(from_name, to_name), from_name, curr_time, "", content)
             # only forward the msg if the destination user is online:
             if CLIENT_NAME_TO_ID.get(to_name, False):
                 send(json.dumps(msg), to=CLIENT_NAME_TO_ID[to_name])
