@@ -160,6 +160,10 @@ $(document).ready(function () {
 });
 // testing logging out by closing the tab
 window.addEventListener("beforeunload", function (e) {
+    e.preventDefault();
+    if (e) {
+        e.returnValue = ''; // Legacy method for cross browser support
+    }
     $.ajax({
         url: "/logout/" + currentUserName,
         type: "GET"
