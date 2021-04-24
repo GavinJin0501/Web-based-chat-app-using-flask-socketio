@@ -142,7 +142,7 @@ def handle_message(msg):
     # msg = {"Type": "Send", "From": from_user, "To": destination, "Content": content, "Chat": private/group, "is_image": 0/1}
     # -> May need a state: group/private
     elif msg["Type"] == "Send":
-        print(msg)
+        # print(msg)
         content = msg["Content"]
         from_name = msg["From"]
         to_name = msg["To"]
@@ -156,6 +156,7 @@ def handle_message(msg):
                 check_db.update_history(to_name, from_name, curr_time, content, "")
             else:
                 check_db.update_history(to_name, from_name, curr_time, "", content)
+                print("get image")
             for each in GROUPS.get(to_name, []):
                 if each != from_name and CLIENT_NAME_TO_ID.get(each, False):
                     send(json.dumps(msg), to=CLIENT_NAME_TO_ID[each])
@@ -218,8 +219,6 @@ def handle_message(msg):
             del GROUPS[group_name]
             check_db.delete_group_chat(group_name)
             check_db.update_json_groups(GROUPS)
-        else:  # others can not delete the group
-            pass
 
 
 @app.route('/logout', defaults={'username': ""})
@@ -239,5 +238,5 @@ def logout(username):
 
 
 if __name__ == "__main__":
-    socket.run(app, debug=True)
     # socket.run(app, host="172.20.10.9", port=5000, debug=True)
+    socket.run(app, host="127.0.0.1", port=5000, debug=True)
