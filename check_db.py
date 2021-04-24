@@ -7,7 +7,7 @@ PASSWORD_HASH = "sha256"
 
 def get_json_groups():
     try:
-        with open("groups.json", "r") as file:
+        with open("/groups.json", "r") as file:
             GROUPS = json.load(file)
     except:
         GROUPS = {'general': []}
