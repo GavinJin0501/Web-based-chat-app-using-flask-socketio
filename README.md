@@ -7,7 +7,7 @@ Then, execute the command: "**make run**" in the terminal where path is this big
 Finally, type the address "**127.0.0.1:5000**" in any of the browsers and start chatting.
 
 ## Link of slides and videos
-**Slides**: ["Prensentation slides"]("Chat App Project Presentation.pdf")
+**Slides**: ["Prensentation slides"](Chat App Project Presentation.pdf)
 
 ## List of files submitted:
 ```
