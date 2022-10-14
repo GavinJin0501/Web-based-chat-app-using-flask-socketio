@@ -3,10 +3,11 @@
 ## How to start a server:
 
 First, following the [HOWTO.txt](HOWTO.txt) file to configure the program.
-Then, execute the command: "make run" in the terminal where path is this big folder
-Finally, type the address "127.0.0.1:5000" in any of the browsers and start chatting.
+Then, execute the command: "**make run**" in the terminal where path is this big folder
+Finally, type the address "**127.0.0.1:5000**" in any of the browsers and start chatting.
 
-## Details are here: [Prensentation slides](Chat App Project Presentation.pdf)
+## Link of slides and videos
+**Slides**: [Prensentation slides](Chat App Project Presentation.pdf)
 
 ## List of files submitted:
 ```
