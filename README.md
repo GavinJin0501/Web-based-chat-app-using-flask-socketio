@@ -2,7 +2,7 @@
 
 ## How to start a server:
 
-First, following the HOWTO.txt file to configure the program.
+First, following the [HOWTO.txt](HOWTO.txt) file to configure the program.
 Then, execute the command: "make run" in the terminal where path is this big folder
 Finally, type the address "127.0.0.1:5000" in any of the browsers and start chatting.
 
