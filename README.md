@@ -7,7 +7,7 @@ Then, execute the command: "**make run**" in the terminal where path is this big
 Finally, type the address "**127.0.0.1:5000**" in any of the browsers and start chatting.
 
 ## Link of slides and videos
-**Slides**: ["Prensentation slides"](Chat App Project Presentation.pdf)
+**Slides**: <a href="https://github.com/GavinJin0501/Web-based-chat-app-using-flask-socketio/blob/main/Chat%20App%20Project%20Presentation.pdf">Prensentation slides</a>
 
 ## List of files submitted:
 ```
