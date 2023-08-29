@@ -6,7 +6,7 @@ First, following the [HOWTO.txt](HOWTO.txt) file to configure the program.
 Then, execute the command: "**make run**" in the terminal where path is this big folder
 Finally, type the address "**127.0.0.1:5000**" in any of the browsers and start chatting.
 
-## Details in <a href="https://github.com/GavinJin0501/Web-based-chat-app-using-flask-socketio/blob/main/Chat%20App%20Project%20Presentation.pdf">Presentation Slides</a> and <a href="">Presentation Video</a>
+## Details in <a href="https://github.com/GavinJin0501/Web-based-chat-app-using-flask-socketio/blob/main/Chat%20App%20Project%20Presentation.pdf">Presentation Slides</a> and <a href="https://www.youtube.com/watch?v=nFIdPz-mtdo&list=PLbDb16_tFGScs3xo89AnpynVHbHB2DE9t&index=15">Presentation Video</a>
 
 ## List of files submitted:
 ```
